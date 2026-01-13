@@ -1,13 +1,19 @@
 spring.application.name=sentinel
 
-# DATABASE URL
+#DATABASE URL
 spring.datasource.url=jdbc:postgresql://localhost:5432/sentinel
 
-# DATABASE CREDENTIALS (example values for local development)
+#DATABASE CREDENTIALS (example values for local development)
 spring.datasource.username=postgres
 spring.datasource.password=password
 
-# JDBC DRIVER
+#JDBC DRIVER
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.jpa.show-sql=true
+
+#JWT SECRET (example values for local development)
+api.security.token.secret=secret
+
+#JWT DURATION (example values for local development)
+api.security.token.duration=24
