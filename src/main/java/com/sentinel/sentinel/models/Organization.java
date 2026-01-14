@@ -3,6 +3,8 @@ package com.sentinel.sentinel.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "organization")
 public class Organization {
@@ -40,6 +42,18 @@ public class Organization {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization that = (Organization) o;
+        return status == that.status && Objects.equals(id, that.id) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, status);
     }
 
     public int getStatus() {

@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -129,5 +130,19 @@ public class Users implements UserDetails {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Users users = (Users) o;
+        return status == users.status && Objects.equals(id, users.id) && Objects.equals(name, users.name)
+                && Objects.equals(email, users.email) && Objects.equals(passwordHash, users.passwordHash)
+                && Objects.equals(organization, users.organization) && role == users.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, passwordHash, organization, role, status);
     }
 }
