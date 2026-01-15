@@ -1,5 +1,6 @@
 package com.sentinel.sentinel.infra.security;
 
+import com.sentinel.sentinel.utils.ApiVersionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,15 +26,19 @@ public class SecurityConfiguration {
     @Autowired
     private SecurityFilter securityFilter;
 
+    @Value("${api.version}")
+    private String API_VERSION;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        String version  = ApiVersionUtil.normalize(this.API_VERSION);
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(HttpMethod.POST, "/auth/register").permitAll();
-                    request.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+                    request.requestMatchers(HttpMethod.POST, version + "/auth/register").permitAll();
+                    request.requestMatchers(HttpMethod.POST, version + "/auth/login").permitAll();
                     request.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,5 +1,8 @@
 spring.application.name=sentinel
 
+#API VERSION
+api.version=v1
+
 #DATABASE URL
 spring.datasource.url=jdbc:postgresql://localhost:5432/sentinel
 
