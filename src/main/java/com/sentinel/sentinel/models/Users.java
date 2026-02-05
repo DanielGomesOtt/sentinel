@@ -121,7 +121,7 @@ public class Users implements UserDetails {
     }
 
     public void setRole(Roles role) {
-        role = role;
+        this.role = role;
     }
 
     public int getStatus() {
