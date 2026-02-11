@@ -20,8 +20,6 @@ class TokenServiceTest {
 
     private Users user;
 
-    private Users incompleteUser;
-
     private TokenService tokenService;
 
     @BeforeEach
