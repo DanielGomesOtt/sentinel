@@ -1,5 +1,6 @@
 package com.sentinel.sentinel.infra.security;
 
+import com.sentinel.sentinel.enums.Roles;
 import com.sentinel.sentinel.utils.ApiVersionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(HttpMethod.POST, version + "/auth/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/auth/login").permitAll();
-                    request.requestMatchers("/api/v1/auth/login").permitAll();
+                    request.requestMatchers(HttpMethod.POST, version + "/users").hasRole(Roles.ADMIN.name());
+                    request.requestMatchers("/api/"+version+"/auth/login").permitAll();
                     request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/v3/api-docs/**").permitAll();
                     request.anyRequest().authenticated();

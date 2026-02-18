@@ -31,6 +31,7 @@ public class Users implements UserDetails {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
+    @Enumerated(EnumType.STRING)
     private Roles role;
 
     private int status;

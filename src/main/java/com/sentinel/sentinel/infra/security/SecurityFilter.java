@@ -34,7 +34,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(authorization != null) {
             Map<String, Claim> claims = tokenService.verifyToken(authorization);
-            Optional<UserDetails> user = usersRepository.findByEmailAndStatus(claims.get("email").toString(), 1 );
+            Optional<UserDetails> user = usersRepository.findByEmailAndStatus(claims.get("email").asString(), 1 );
 
             if(user.isPresent()) {
                 var authentication = new UsernamePasswordAuthenticationToken(
