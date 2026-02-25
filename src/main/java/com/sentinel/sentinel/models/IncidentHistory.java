@@ -1,0 +1,96 @@
+package com.sentinel.sentinel.models;
+
+import jakarta.persistence.*;
+
+import java.time.Instant;
+import java.util.Objects;
+
+@Entity
+@Table(name = "incident_history")
+public class IncidentHistory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "incident_id")
+    private Incident incidentId;
+    @Column(name = "previous_status")
+    private String previousStatus;
+    @Column(name = "new_status")
+    private String newStatus;
+    private String action;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "performed_by")
+    private Users performedBy;
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Incident getIncidentId() {
+        return incidentId;
+    }
+
+    public void setIncidentId(Incident incidentId) {
+        this.incidentId = incidentId;
+    }
+
+    public String getPreviousStatus() {
+        return previousStatus;
+    }
+
+    public void setPreviousStatus(String previousStatus) {
+        this.previousStatus = previousStatus;
+    }
+
+    public String getNewStatus() {
+        return newStatus;
+    }
+
+    public void setNewStatus(String newStatus) {
+        this.newStatus = newStatus;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public Users getPerformedBy() {
+        return performedBy;
+    }
+
+    public void setPerformedBy(Users performedBy) {
+        this.performedBy = performedBy;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        IncidentHistory that = (IncidentHistory) o;
+        return Objects.equals(id, that.id) && Objects.equals(incidentId, that.incidentId) && Objects.equals(previousStatus, that.previousStatus) && Objects.equals(newStatus, that.newStatus) && Objects.equals(action, that.action) && Objects.equals(performedBy, that.performedBy) && Objects.equals(createdAt, that.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, incidentId, previousStatus, newStatus, action, performedBy, createdAt);
+    }
+}
