@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name = "incident_history")
@@ -25,6 +26,15 @@ public class IncidentHistory {
     private Users performedBy;
     @Column(name = "created_at")
     private Instant createdAt;
+
+    public IncidentHistory(Incident incidentId, String previousStatus, String newStatus, String action, Users performedBy, Instant createdAt) {
+        this.incidentId = incidentId;
+        this.previousStatus = previousStatus;
+        this.newStatus = newStatus;
+        this.action = action;
+        this.performedBy = performedBy;
+        this.createdAt = createdAt;
+    }
 
     public Long getId() {
         return id;

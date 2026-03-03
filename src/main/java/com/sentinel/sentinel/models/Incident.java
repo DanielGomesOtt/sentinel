@@ -3,9 +3,11 @@ package com.sentinel.sentinel.models;
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Severity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name = "incident")
@@ -19,6 +21,7 @@ public class Incident {
     @Enumerated(EnumType.STRING)
     private Severity severity;
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private IncidentStatus incidentStatus;
     @Column(name = "service_name")
     private String serviceName;
@@ -33,6 +36,29 @@ public class Incident {
     private Instant createdAt;
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    public Incident(String title,
+                    String description,
+                    Severity severity,
+                    IncidentStatus incidentStatus,
+                    String serviceName,
+                    Instant slaDeadline,
+                    boolean slaViolate,
+                    Users createdBy,
+                    Instant createdAt,
+                    Instant updatedAt) {
+
+        this.title = title;
+        this.description = description;
+        this.severity = severity;
+        this.incidentStatus = incidentStatus;
+        this.serviceName = serviceName;
+        this.slaDeadline = slaDeadline;
+        this.slaViolate = slaViolate;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -13,4 +13,12 @@ public class SlaRule {
     private String severity;
     @Column(name = "duration_hours")
     private int durationHours;
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public int getDurationHours() {
+        return durationHours;
+    }
 }
