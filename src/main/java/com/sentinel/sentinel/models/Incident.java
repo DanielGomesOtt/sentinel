@@ -32,10 +32,15 @@ public class Incident {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private Users createdBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization createdByOrganization;
     @Column(name = "created_at")
     private Instant createdAt;
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    public Incident(){}
 
     public Incident(String title,
                     String description,
@@ -45,6 +50,7 @@ public class Incident {
                     Instant slaDeadline,
                     boolean slaViolate,
                     Users createdBy,
+                    Organization createdByOrganization,
                     Instant createdAt,
                     Instant updatedAt) {
 
@@ -56,6 +62,7 @@ public class Incident {
         this.slaDeadline = slaDeadline;
         this.slaViolate = slaViolate;
         this.createdBy = createdBy;
+        this.createdByOrganization = createdByOrganization;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

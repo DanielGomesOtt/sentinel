@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                     request.requestMatchers(HttpMethod.POST, version + "/auth/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/auth/login").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/users").hasRole(Roles.ADMIN.name());
+                    request.requestMatchers(HttpMethod.GET, version + "/incidents/{id}").hasRole(Roles.TECH.name());
                     request.requestMatchers("/api/"+version+"/auth/login").permitAll();
                     request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/v3/api-docs/**").permitAll();

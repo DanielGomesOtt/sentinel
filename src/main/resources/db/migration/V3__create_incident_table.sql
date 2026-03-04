@@ -8,6 +8,7 @@ CREATE TABLE incident (
       sla_deadline TIMESTAMP NOT NULL,
       sla_violated BOOLEAN NOT NULL DEFAULT FALSE,
       created_by BIGINT NOT NULL,
+      organization_id BIGINT NOT NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

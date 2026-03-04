@@ -8,10 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 
 @RestController
@@ -35,5 +33,16 @@ public class IncidentController {
         return ResponseEntity
                 .created(uri)
                 .body(createdIncident);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(
+            summary = "Find an incident by id.",
+            description = "Retrieves a specific incident by its unique identifier. "
+                    + "The user must be authenticated and can only access incidents "
+                    + "belonging to their organization."
+    )
+    public ResponseEntity<CreatedIncidentDTO> findIncidentById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(incidentService.getIncidentById(id));
     }
 }

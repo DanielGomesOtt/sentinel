@@ -1,20 +1,27 @@
 package com.sentinel.sentinel.services;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Severity;
+import com.sentinel.sentinel.exceptions.IncidentNotFoundException;
+import com.sentinel.sentinel.exceptions.UserNotAuthenticatedException;
 import com.sentinel.sentinel.exceptions.UserNotFoundException;
 import com.sentinel.sentinel.models.Incident;
 import com.sentinel.sentinel.models.IncidentHistory;
 import com.sentinel.sentinel.models.SlaRule;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.*;
+import com.sentinel.sentinel.utils.AuthenticatedPrincipalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,6 +42,9 @@ public class IncidentService {
     @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     public CreatedIncidentDTO createIncident(CreateIncidentDTO data) {
         Optional<Users> user = usersRepository.findByIdAndStatus(data.userId(), 1);
 
@@ -43,7 +53,7 @@ public class IncidentService {
             Instant slaInstant = Instant.now().plus(Duration.ofHours(sla.getDurationHours()));
             Incident incident = new Incident(data.title(), data.description(), data.severity(),
                     IncidentStatus.OPEN, data.serviceName(), slaInstant, false, user.get(),
-                    Instant.now(), Instant.now());
+                    user.get().getOrganization(), Instant.now(), Instant.now());
 
             Incident createdIncident = incidentRepository.save(incident);
             IncidentHistory createdIncidentHistory = new IncidentHistory(
@@ -56,5 +66,22 @@ public class IncidentService {
         }
 
         throw new UserNotFoundException("The specified user was not found.");
+    }
+
+    public CreatedIncidentDTO getIncidentById(Long incidentId) {
+        Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
+
+        if(user != null) {
+            Optional<Incident> incident = incidentRepository.findByIdAndCreatedByOrganization(incidentId,
+                    user.getOrganization());
+
+            if(incident.isPresent()) {
+                return new CreatedIncidentDTO(incident.get());
+            }
+
+            throw new IncidentNotFoundException("The specified incident was not found.");
+        }
+
+        throw new UserNotAuthenticatedException("The user is not authenticated.");
     }
 }

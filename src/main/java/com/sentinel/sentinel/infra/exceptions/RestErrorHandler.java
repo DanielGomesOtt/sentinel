@@ -1,8 +1,6 @@
 package com.sentinel.sentinel.infra.exceptions;
 
-import com.sentinel.sentinel.exceptions.OrganizationNotFoundException;
-import com.sentinel.sentinel.exceptions.UserAlreadyExistException;
-import com.sentinel.sentinel.exceptions.UserNotFoundException;
+import com.sentinel.sentinel.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,5 +25,17 @@ public class RestErrorHandler {
     public ResponseEntity<RestErrorMessage> handleUserNotFoundException(UserNotFoundException ex) {
         RestErrorMessage error = new RestErrorMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(IncidentNotFoundException.class)
+    public ResponseEntity<RestErrorMessage> handleIncidentNotFoundException(IncidentNotFoundException ex) {
+        RestErrorMessage error = new RestErrorMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public ResponseEntity<RestErrorMessage> handleUserNotAuthenticatedException(UserNotAuthenticatedException ex) {
+        RestErrorMessage error = new RestErrorMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
