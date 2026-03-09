@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CreateIncidentDTO(
-        @NotNull(message = "User ID is required to create this incident.")
-        Long userId,
         @NotBlank(message = "Incident title must be provided.")
         String title,
         @NotBlank(message = "Incident description must be provided.")

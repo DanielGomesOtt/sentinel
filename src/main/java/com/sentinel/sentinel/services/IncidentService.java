@@ -46,34 +46,40 @@ public class IncidentService {
     private TokenService tokenService;
 
     public CreatedIncidentDTO createIncident(CreateIncidentDTO data) {
-        Optional<Users> user = usersRepository.findByIdAndStatus(data.userId(), 1);
+        Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
 
-        if(user.isPresent()) {
+        if(user != null) {
             SlaRule sla = slaRuleRepository.findById(data.severity().name()).get();
             Instant slaInstant = Instant.now().plus(Duration.ofHours(sla.getDurationHours()));
             Incident incident = new Incident(data.title(), data.description(), data.severity(),
-                    IncidentStatus.OPEN, data.serviceName(), slaInstant, false, user.get(),
-                    user.get().getOrganization(), Instant.now(), Instant.now());
+                    IncidentStatus.OPEN, data.serviceName(), slaInstant, false, user,
+                    user.getOrganization(), Instant.now(), Instant.now());
 
             Incident createdIncident = incidentRepository.save(incident);
             IncidentHistory createdIncidentHistory = new IncidentHistory(
                     createdIncident, null, "OPEN", "create incident",
-                    user.get(), incident.getCreatedAt());
+                    user, incident.getCreatedAt());
 
             incidentHistoryRepository.save(createdIncidentHistory);
 
             return new CreatedIncidentDTO(createdIncident);
         }
 
-        throw new UserNotFoundException("The specified user was not found.");
+        throw new UserNotAuthenticatedException("The user is not authenticated.");
     }
 
     public CreatedIncidentDTO getIncidentById(Long incidentId) {
         Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
 
+        Optional<Incident> incident;
         if(user != null) {
-            Optional<Incident> incident = incidentRepository.findByIdAndCreatedByOrganization(incidentId,
-                    user.getOrganization());
+            if (user.getRole().name().equals("USER")) {
+                incident = incidentRepository.findByIdAndCreatedByOrganizationAndCreatedBy(incidentId,
+                        user.getOrganization(), user);
+            } else {
+                incident = incidentRepository.findByIdAndCreatedByOrganization(incidentId,
+                        user.getOrganization());
+            }
 
             if(incident.isPresent()) {
                 return new CreatedIncidentDTO(incident.get());
