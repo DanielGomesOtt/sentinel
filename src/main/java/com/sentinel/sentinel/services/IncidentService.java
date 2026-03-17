@@ -1,27 +1,32 @@
 package com.sentinel.sentinel.services;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
+import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Severity;
 import com.sentinel.sentinel.exceptions.IncidentNotFoundException;
 import com.sentinel.sentinel.exceptions.UserNotAuthenticatedException;
-import com.sentinel.sentinel.exceptions.UserNotFoundException;
 import com.sentinel.sentinel.models.Incident;
 import com.sentinel.sentinel.models.IncidentHistory;
 import com.sentinel.sentinel.models.SlaRule;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.*;
+import com.sentinel.sentinel.specifications.IncidentSpecification;
 import com.sentinel.sentinel.utils.AuthenticatedPrincipalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -89,5 +94,53 @@ public class IncidentService {
         }
 
         throw new UserNotAuthenticatedException("The user is not authenticated.");
+    }
+
+    public PaginatedIncidentsDTO findAll(int page, int size, String title, String description, String severity,
+                                         String status, String serviceName, String slaDeadline, boolean slaViolate) {
+
+        Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
+        Long userId = null;
+        Long organizationId = user.getOrganization().getId();
+
+        if(user.getRole().name().equals("USER")) {
+            userId = user.getId();
+        }
+
+        Pageable pagination = PageRequest.of(page, size);
+        Severity severityEnum = null;
+        IncidentStatus statusEnum = null;
+        Instant slaDeadlineInstant = null;
+        if(severity != null) {
+            severityEnum = Severity.valueOf(severity.toUpperCase());
+        }
+
+        if(status != null) {
+            statusEnum = IncidentStatus.valueOf(status.toUpperCase());
+        }
+
+        if(slaDeadline != null) {
+             slaDeadlineInstant = LocalDateTime
+                    .parse(slaDeadline, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    .toInstant(ZoneOffset.UTC);
+        }
+        Specification<Incident> spec = Specification
+                .where(IncidentSpecification.organizationId(organizationId))
+                .and(IncidentSpecification.userId(userId))
+                .and(IncidentSpecification.title(title))
+                .and(IncidentSpecification.description(description))
+                .and(IncidentSpecification.severity(severityEnum))
+                .and(IncidentSpecification.status(statusEnum))
+                .and(IncidentSpecification.serviceName(serviceName))
+                .and(IncidentSpecification.slaDeadline(slaDeadlineInstant))
+                .and(IncidentSpecification.slaViolated(slaViolate));
+
+        Page<Incident> incidents = incidentRepository.findAll(spec, pagination);
+        List<CreatedIncidentDTO> formattedIncidents = incidents.getContent().stream()
+                                                                            .map(CreatedIncidentDTO::new).toList();
+
+        return new PaginatedIncidentsDTO(formattedIncidents, incidents.isFirst(), incidents.isLast(),
+                incidents.getNumber(), incidents.getNumberOfElements(), incidents.getSize(),
+                incidents.getTotalElements(), incidents.getTotalPages());
     }
 }

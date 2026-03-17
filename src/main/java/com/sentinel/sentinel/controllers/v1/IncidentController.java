@@ -2,6 +2,7 @@ package com.sentinel.sentinel.controllers.v1;
 
 import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
+import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
 import com.sentinel.sentinel.services.IncidentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,5 +45,25 @@ public class IncidentController {
     )
     public ResponseEntity<CreatedIncidentDTO> findIncidentById(@PathVariable Long id) {
         return ResponseEntity.ok().body(incidentService.getIncidentById(id));
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "Find incidents by params.",
+            description = "Retrieves incidents by params. "
+                    + "The user must be authenticated and can only access incidents "
+                    + "belonging to their organization."
+    )
+    public ResponseEntity<PaginatedIncidentsDTO> findAll(@RequestParam(required = true) int page,
+                                                         @RequestParam(required = true) int size,
+                                                         @RequestParam(required = false) String title,
+                                                         @RequestParam(required = false) String description,
+                                                         @RequestParam(required = false) String severity,
+                                                         @RequestParam(required = false) String status,
+                                                         @RequestParam(required = false) String serviceName,
+                                                         @RequestParam(required = false) String slaDeadline,
+                                                         @RequestParam(required = false) boolean slaViolate) {
+        return ResponseEntity.ok(incidentService.findAll(page, size, title, description, severity, status, serviceName, slaDeadline,
+                                            slaViolate));
     }
 }
