@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @Table(name = "incident_history")
@@ -35,6 +34,8 @@ public class IncidentHistory {
         this.performedBy = performedBy;
         this.createdAt = createdAt;
     }
+
+    public IncidentHistory() {}
 
     public Long getId() {
         return id;
