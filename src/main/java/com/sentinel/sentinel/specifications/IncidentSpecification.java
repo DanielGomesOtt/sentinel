@@ -56,7 +56,7 @@ public class IncidentSpecification {
         return (root, query, criteriaBuilder) -> {
             if (status == null) return null;
 
-            return criteriaBuilder.equal(root.get("status"), status);
+            return criteriaBuilder.equal(root.get("incidentStatus"), status);
         };
     }
 
