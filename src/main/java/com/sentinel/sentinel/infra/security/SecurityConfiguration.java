@@ -26,6 +26,9 @@ public class SecurityConfiguration {
     @Autowired
     private SecurityFilter securityFilter;
 
+    @Autowired
+    private SecurityExceptionHandler securityExceptionHandler;
+
     @Value("${api.version}")
     private String API_VERSION;
 
@@ -34,6 +37,8 @@ public class SecurityConfiguration {
         String version  = ApiVersionUtil.normalize(this.API_VERSION);
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(securityExceptionHandler))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {

@@ -29,8 +29,7 @@ public class IncidentHistoryService {
 
     public PaginatedIncidentHistoriesDTO findHistoriesByParams(int page, int size, Long incidentId, String newStatus,
                                                        String previousStatus, String action, String from, String to,
-                                                       Long userId) {
-        Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
+                                                       Long userId, Users user) {
         Long organizationId = user.getOrganization().getId();
 
         if(user.getRole().name().equals("USER")) {

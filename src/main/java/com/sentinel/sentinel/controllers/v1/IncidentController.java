@@ -3,12 +3,14 @@ package com.sentinel.sentinel.controllers.v1;
 import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
 import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
+import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.IncidentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,8 +28,9 @@ public class IncidentController {
             summary = "Create an incident manually.",
             description = "Creates a new incident manually."
     )
-    public ResponseEntity<CreatedIncidentDTO> createManually(@RequestBody @Valid CreateIncidentDTO data) {
-        CreatedIncidentDTO createdIncident = incidentService.createIncident(data);
+    public ResponseEntity<CreatedIncidentDTO> createManually(@RequestBody @Valid CreateIncidentDTO data,
+                                                             @AuthenticationPrincipal Users user) {
+        CreatedIncidentDTO createdIncident = incidentService.createIncident(data, user);
 
         URI uri = URI.create("/v1/incidents/" + createdIncident.id());
 
@@ -43,8 +46,9 @@ public class IncidentController {
                     + "The user must be authenticated and can only access incidents "
                     + "belonging to their organization."
     )
-    public ResponseEntity<CreatedIncidentDTO> findIncidentById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(incidentService.getIncidentById(id));
+    public ResponseEntity<CreatedIncidentDTO> findIncidentById(@PathVariable Long id,
+                                                               @AuthenticationPrincipal Users user) {
+        return ResponseEntity.ok().body(incidentService.getIncidentById(id, user));
     }
 
     @GetMapping
@@ -62,8 +66,9 @@ public class IncidentController {
                                                          @RequestParam(required = false) String status,
                                                          @RequestParam(required = false) String serviceName,
                                                          @RequestParam(required = false) String slaDeadline,
-                                                         @RequestParam(required = false) boolean slaViolate) {
+                                                         @RequestParam(required = false) boolean slaViolate,
+                                                         @AuthenticationPrincipal Users user) {
         return ResponseEntity.ok(incidentService.findAll(page, size, title, description, severity, status, serviceName, slaDeadline,
-                                            slaViolate));
+                                            slaViolate, user));
     }
 }

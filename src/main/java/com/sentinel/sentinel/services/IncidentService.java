@@ -50,8 +50,8 @@ public class IncidentService {
     @Autowired
     private TokenService tokenService;
 
-    public CreatedIncidentDTO createIncident(CreateIncidentDTO data) {
-        Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
+    public CreatedIncidentDTO createIncident(CreateIncidentDTO data, Users user) {
+
 
         if(user != null) {
             SlaRule sla = slaRuleRepository.findById(data.severity().name()).get();
@@ -73,8 +73,8 @@ public class IncidentService {
         throw new UserNotAuthenticatedException("The user is not authenticated.");
     }
 
-    public CreatedIncidentDTO getIncidentById(Long incidentId) {
-        Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
+    public CreatedIncidentDTO getIncidentById(Long incidentId, Users user) {
+
 
         Optional<Incident> incident;
         if(user != null) {
@@ -97,9 +97,9 @@ public class IncidentService {
     }
 
     public PaginatedIncidentsDTO findAll(int page, int size, String title, String description, String severity,
-                                         String status, String serviceName, String slaDeadline, boolean slaViolate) {
+                                         String status, String serviceName, String slaDeadline, boolean slaViolate,
+                                         Users user) {
 
-        Users user = AuthenticatedPrincipalUtil.getAuthenticatedUser();
         Long userId = null;
         Long organizationId = user.getOrganization().getId();
 

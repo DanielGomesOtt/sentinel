@@ -21,4 +21,8 @@ public class SlaRule {
     public int getDurationHours() {
         return durationHours;
     }
+
+    public void setDurationHours( int hours) {
+        this.durationHours = hours;
+    }
 }
