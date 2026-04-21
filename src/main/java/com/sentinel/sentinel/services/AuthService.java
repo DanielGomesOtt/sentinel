@@ -37,7 +37,7 @@ public class AuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return usersRepository.findByEmailAndStatus(email, 1)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        "User not found: " + email
+                        "Could not complete the login with the provided information."
                 ));
     }
 
@@ -45,7 +45,7 @@ public class AuthService implements UserDetailsService {
         Optional<UserDetails> alreadyExist = usersRepository.findByEmailAndStatus(user.email(), 1);
 
         if(alreadyExist.isPresent()) {
-            throw new UserAlreadyExistException("This email is already in use.");
+            throw new UserAlreadyExistException("Could not complete the registration with the provided information.");
         }
 
         Organization organization = new Organization(user.organizationName(), 1);

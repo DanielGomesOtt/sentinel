@@ -3,6 +3,7 @@ package com.sentinel.sentinel.controllers.v1;
 import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
 import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
+import com.sentinel.sentinel.dto.incident.UpdateIncidentDTO;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.IncidentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,5 +71,15 @@ public class IncidentController {
                                                          @AuthenticationPrincipal Users user) {
         return ResponseEntity.ok(incidentService.findAll(page, size, title, description, severity, status, serviceName, slaDeadline,
                                             slaViolate, user));
+    }
+
+    @PutMapping
+    @Operation(summary = "Update an incident",
+            description = "Updates an existing incident by its ID. Allows modification of fields such as title, " +
+                    "description, severity, status, and related service information."
+    )
+    public ResponseEntity<UpdateIncidentDTO> updateManually(@RequestBody @Valid UpdateIncidentDTO data,
+                                                            @AuthenticationPrincipal Users user){
+        return ResponseEntity.ok(incidentService.updateIncident(data, user));
     }
 }

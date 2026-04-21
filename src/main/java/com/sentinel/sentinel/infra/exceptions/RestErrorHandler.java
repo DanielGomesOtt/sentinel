@@ -38,4 +38,10 @@ public class RestErrorHandler {
         RestErrorMessage error = new RestErrorMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+    @ExceptionHandler(IncidentAlreadyClosedException.class)
+    public ResponseEntity<RestErrorMessage> handleIncidentAlreadyClosedException(IncidentAlreadyClosedException ex) {
+        RestErrorMessage error = new RestErrorMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }

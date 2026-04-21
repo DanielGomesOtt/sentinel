@@ -2,13 +2,13 @@ package com.sentinel.sentinel.infra.exceptions;
 
 public class RestErrorMessage {
 
-    private String message;
+    private String error;
 
-    public RestErrorMessage (String errorMessage) {
-        this.message = errorMessage;
+    public RestErrorMessage(String error) {
+        this.error = error;
     }
 
-    public String getMessage() {
-        return message;
+    public String getError() {
+        return error;
     }
 }

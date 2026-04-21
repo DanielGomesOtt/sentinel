@@ -3,8 +3,11 @@ package com.sentinel.sentinel.services;
 import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
 import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
+import com.sentinel.sentinel.dto.incident.UpdateIncidentDTO;
 import com.sentinel.sentinel.enums.IncidentStatus;
+import com.sentinel.sentinel.enums.Roles;
 import com.sentinel.sentinel.enums.Severity;
+import com.sentinel.sentinel.exceptions.IncidentAlreadyClosedException;
 import com.sentinel.sentinel.exceptions.IncidentNotFoundException;
 import com.sentinel.sentinel.exceptions.UserNotAuthenticatedException;
 import com.sentinel.sentinel.models.Incident;
@@ -14,6 +17,8 @@ import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.*;
 import com.sentinel.sentinel.specifications.IncidentSpecification;
 import com.sentinel.sentinel.utils.AuthenticatedPrincipalUtil;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +55,7 @@ public class IncidentService {
     @Autowired
     private TokenService tokenService;
 
+    @Transactional
     public CreatedIncidentDTO createIncident(CreateIncidentDTO data, Users user) {
 
 
@@ -142,5 +148,71 @@ public class IncidentService {
         return new PaginatedIncidentsDTO(formattedIncidents, incidents.isFirst(), incidents.isLast(),
                 incidents.getNumber(), incidents.getNumberOfElements(), incidents.getSize(),
                 incidents.getTotalElements(), incidents.getTotalPages());
+    }
+
+    @Transactional
+    public UpdateIncidentDTO updateIncident(@Valid UpdateIncidentDTO data, Users user) {
+
+        if(user.getRole() == Roles.TECH && data.incidentStatus() == IncidentStatus.CLOSED){
+            data = new UpdateIncidentDTO(data.incidentId(), data.title(), data.description(), data.severity(),
+                    data.serviceName());
+        }
+
+        Optional<Incident> incident = incidentRepository.findByIdAndCreatedByOrganization(data.incidentId(),
+                                                                        user.getOrganization());
+
+        String previousStatus = null;
+
+        if(incident.isPresent()) {
+
+            previousStatus = incident.get().getIncidentStatus().name();
+
+
+            if(incident.get().getIncidentStatus() == IncidentStatus.CLOSED){
+                throw new IncidentAlreadyClosedException("Incident is already closed and cannot be updated.");
+            }
+
+            if(data.title() != null && !data.title().isEmpty()) {
+                incident.get().setTitle(data.title());
+            }
+
+            if(data.description() != null && !data.description().isEmpty()) {
+                incident.get().setDescription(data.description());
+            }
+
+            if(data.serviceName() != null && !data.serviceName().isEmpty()) {
+                incident.get().setServiceName(data.serviceName());
+            }
+
+            if(data.severity() != null) {
+                incident.get().setSeverity(data.severity());
+            }
+
+            if(data.incidentStatus() != null) {
+                System.out.println(data.toString());
+                incident.get().setIncidentStatus(data.incidentStatus());
+            }
+
+            incident.get().setUpdatedAt(Instant.now());
+
+            Incident updatedIncident = incidentRepository.save(incident.get());
+            IncidentHistory updatedIncidentHistory = new IncidentHistory(
+                    updatedIncident, previousStatus, updatedIncident.getIncidentStatus().name(),
+                    "update incident",
+                    user, incident.get().getUpdatedAt());
+
+            incidentHistoryRepository.save(updatedIncidentHistory);
+
+            return new UpdateIncidentDTO(
+                    updatedIncident.getId(),
+                    updatedIncident.getTitle(),
+                    updatedIncident.getDescription(),
+                    updatedIncident.getSeverity(),
+                    updatedIncident.getServiceName(),
+                    updatedIncident.getIncidentStatus()
+            );
+        }
+
+        throw new IncidentNotFoundException("The specified incident was not found.");
     }
 }
