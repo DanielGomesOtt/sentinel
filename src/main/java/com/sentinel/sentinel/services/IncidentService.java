@@ -103,7 +103,7 @@ public class IncidentService {
     }
 
     public PaginatedIncidentsDTO findAll(int page, int size, String title, String description, String severity,
-                                         String status, String serviceName, String slaDeadline, boolean slaViolate,
+                                         String status, String serviceName, String slaDeadline, Boolean slaViolate,
                                          Users user) {
 
         Long userId = null;

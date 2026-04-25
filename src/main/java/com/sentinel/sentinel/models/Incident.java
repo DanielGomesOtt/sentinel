@@ -67,6 +67,33 @@ public class Incident {
         this.updatedAt = updatedAt;
     }
 
+    public Incident(
+                    Long id,
+                    String title,
+                    String description,
+                    Severity severity,
+                    IncidentStatus incidentStatus,
+                    String serviceName,
+                    Instant slaDeadline,
+                    boolean slaViolate,
+                    Users createdBy,
+                    Organization createdByOrganization,
+                    Instant createdAt,
+                    Instant updatedAt) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.severity = severity;
+        this.incidentStatus = incidentStatus;
+        this.serviceName = serviceName;
+        this.slaDeadline = slaDeadline;
+        this.slaViolate = slaViolate;
+        this.createdBy = createdBy;
+        this.createdByOrganization = createdByOrganization;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
