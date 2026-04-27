@@ -2,8 +2,10 @@ package com.sentinel.sentinel.dto.incident;
 
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Severity;
+import jakarta.validation.constraints.NotNull;
 
 public record UpdateIncidentDTO(
+        @NotNull
         Long incidentId,
         String title,
         String description,

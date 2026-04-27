@@ -44,16 +44,8 @@ public class IncidentService {
     private IncidentHistoryRepository incidentHistoryRepository;
 
     @Autowired
-    private IncidentLogRepository incidentLogRepository;
-
-    @Autowired
     private SlaRuleRepository slaRuleRepository;
 
-    @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private TokenService tokenService;
 
     @Transactional
     public CreatedIncidentDTO createIncident(CreateIncidentDTO data, Users user) {
