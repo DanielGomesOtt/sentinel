@@ -13,7 +13,7 @@ public class SystemIntegration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Column(name = "client_id")
+    @Column(name = "client_id", unique = true)
     private String clientId;
     @Column(name = "client_secret_hash")
     private String clientSecretHash;

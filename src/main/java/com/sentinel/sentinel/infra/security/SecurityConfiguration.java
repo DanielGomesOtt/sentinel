@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                     request.requestMatchers(HttpMethod.POST, version + "/auth/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/auth/login").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/users").hasRole(Roles.ADMIN.name());
+                    request.requestMatchers(HttpMethod.POST, version + "/systemIntegration").hasRole(Roles.ADMIN.name());
                     request.requestMatchers(HttpMethod.PUT, version + "/incidents").hasRole(Roles.TECH.name());
                     request.requestMatchers(HttpMethod.GET, version + "/incidents/{id}");
                     request.requestMatchers("/api/"+version+"/auth/login").permitAll();
