@@ -7,7 +7,6 @@ import com.sentinel.sentinel.models.IncidentHistory;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.IncidentHistoryRepository;
 import com.sentinel.sentinel.specifications.IncidentHistorySpecification;
-import com.sentinel.sentinel.utils.AuthenticatedPrincipalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

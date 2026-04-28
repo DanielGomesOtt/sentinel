@@ -16,7 +16,6 @@ import com.sentinel.sentinel.models.SlaRule;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.*;
 import com.sentinel.sentinel.specifications.IncidentSpecification;
-import com.sentinel.sentinel.utils.AuthenticatedPrincipalUtil;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
