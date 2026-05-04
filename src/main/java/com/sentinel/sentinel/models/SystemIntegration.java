@@ -45,6 +45,8 @@ public class SystemIntegration {
         this.createdAt = createdAt;
     }
 
+    public SystemIntegration(){}
+
     public Long getId() {
         return id;
     }

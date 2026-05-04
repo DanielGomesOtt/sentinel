@@ -52,7 +52,7 @@ class UsersRepositoryTest {
         user.setOrganization(savedOrganization);
         usersRepository.save(user);
 
-        Optional<UserDetails> result = usersRepository.findByEmailAndStatus("daniel@email.com", 1);
+        Optional<Users> result = usersRepository.findByEmailAndStatus("daniel@email.com", 1);
 
         assertTrue(result.isPresent());
     }
@@ -60,7 +60,7 @@ class UsersRepositoryTest {
     @Test
     @DisplayName("find by email should return a empty optional")
     void findByEmailShouldReturnEmptyOptional() {
-        Optional<UserDetails> result = usersRepository.findByEmailAndStatus("daniel@email.com", 1);
+        Optional<Users> result = usersRepository.findByEmailAndStatus("daniel@email.com", 1);
 
         assertTrue(result.isEmpty());
     }

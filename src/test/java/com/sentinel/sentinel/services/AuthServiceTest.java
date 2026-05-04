@@ -5,6 +5,7 @@ import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
 import com.sentinel.sentinel.enums.Roles;
 import com.sentinel.sentinel.exceptions.UserAlreadyExistException;
 import com.sentinel.sentinel.infra.security.SecurityConfiguration;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Organization;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.OrganizationRepository;
@@ -101,7 +102,7 @@ class AuthServiceTest {
         when(usersRepository.save(any(Users.class)))
                 .thenReturn(user);
 
-        when(tokenService.signToken(user))
+        when(tokenService.signUserToken(user))
                 .thenReturn("token");
 
         RegisterUserDTO dto = new RegisterUserDTO(

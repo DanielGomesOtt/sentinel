@@ -60,7 +60,7 @@ class UsersServiceTest {
         when(usersRepository.findByEmailAndStatus(standardUser.getEmail(), 1)).thenReturn(Optional.empty());
         when(organizationRepository.findByIdAndStatus(data.organizationId(), 1))
                 .thenReturn(Optional.of(organization));
-        when(passwordEncoder.encode(data.password())).thenReturn(standardUser.getPassword());
+        when(passwordEncoder.encode(data.password())).thenReturn(standardUser.getPasswordHash());
         when(usersRepository.save(new Users("user", "user@email.com",
                 "encoded password", organization, Roles.USER, 1)))
                 .thenReturn(standardUser);
@@ -71,7 +71,7 @@ class UsersServiceTest {
         assertEquals(standardUser.getId(), createdUser.id());
         assertEquals(standardUser.getName(), createdUser.name());
         assertEquals(standardUser.getEmail(), createdUser.email());
-        assertNotEquals(data.password(), standardUser.getPassword());
+        assertNotEquals(data.password(), standardUser.getPasswordHash());
     }
 
     @Test

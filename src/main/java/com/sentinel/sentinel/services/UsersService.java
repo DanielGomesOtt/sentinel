@@ -29,7 +29,7 @@ public class UsersService {
     private PasswordEncoder passwordEncoder;
 
     public CreatedUserDTO create(CreateUserDTO data) {
-        Optional<UserDetails> alreadyExists = usersRepository.findByEmailAndStatus(data.email(), 1);
+        Optional<Users> alreadyExists = usersRepository.findByEmailAndStatus(data.email(), 1);
 
         if(alreadyExists.isPresent()) {
             throw new UserAlreadyExistException("This email is already in use.");

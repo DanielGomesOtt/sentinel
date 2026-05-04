@@ -3,7 +3,8 @@ package com.sentinel.sentinel.enums;
 public enum Roles {
     ADMIN("admin"),
     TECH("tech"),
-    USER("user");
+    USER("user"),
+    SYSTEM("system");
 
     private String role;
 

@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class Users implements UserDetails {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,28 +62,7 @@ public class Users implements UserDetails {
         this.status = 1;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        if(this.role == Roles.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
-                    new SimpleGrantedAuthority("ROLE_TECH"), new SimpleGrantedAuthority("ROLE_USER"));
-        } else if (this.role == Roles.TECH) {
-            return List.of(new SimpleGrantedAuthority("ROLE_TECH"), new SimpleGrantedAuthority("ROLE_USER"));
-        }
-
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    @Override
-    public @Nullable String getPassword() {
-        return this.passwordHash;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
+    public String getPasswordHash() { return passwordHash; }
 
     public Long getId() {
         return id;

@@ -75,7 +75,7 @@ class AuthControllerTest {
         when(authentication.getPrincipal())
                 .thenReturn(user);
 
-        when(tokenService.signToken(user))
+        when(tokenService.signUserToken(user))
                 .thenReturn("fake-jwt-token");
 
         mockMvc.perform(post("/v1/auth/login")

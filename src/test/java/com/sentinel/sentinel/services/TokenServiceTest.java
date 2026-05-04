@@ -49,7 +49,7 @@ class TokenServiceTest {
     @DisplayName("sign token should return jwt token")
     void signTokenShouldReturnJwtToken() {
 
-        String result = tokenService.signToken(user);
+        String result = tokenService.signUserToken(user);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -59,7 +59,7 @@ class TokenServiceTest {
     @DisplayName("verifyToken should return claims when token is valid")
     void verifyTokenShouldReturnClaims() {
 
-        String token = tokenService.signToken(user);
+        String token = tokenService.signUserToken(user);
 
         Map<String, Claim> claims = tokenService.verifyToken(token);
 

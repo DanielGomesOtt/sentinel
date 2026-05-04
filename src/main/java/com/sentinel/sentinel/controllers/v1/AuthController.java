@@ -3,7 +3,12 @@ package com.sentinel.sentinel.controllers.v1;
 import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
 import com.sentinel.sentinel.dto.auth.AuthenticationDTO;
 import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
+import com.sentinel.sentinel.dto.system_integration.ClientAuthDTO;
+import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
+import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
+import com.sentinel.sentinel.repositories.UsersRepository;
 import com.sentinel.sentinel.services.AuthService;
 import com.sentinel.sentinel.services.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/v1/auth")
 @Tag(name = "Authentication", description = "Here are the requests used to perform login and registration.")
@@ -34,6 +40,12 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    private SystemIntegrationRepository systemIntegrationRepository;
+
     @PostMapping("/login")
     @Operation(summary = "Login endpoint", description = "Authenticates a user and returns an access token.")
     public ResponseEntity<AuthenticatedUserDTO> login(@RequestBody @Valid AuthenticationDTO data) {
@@ -41,17 +53,26 @@ public class AuthController {
                 data.email(), data.password());
         Authentication auth = this.authenticationManager.authenticate(usernamePassword);
 
-        Users authenticatedUser = (Users) auth.getPrincipal();
+        AuthenticatedPrincipal authenticatedUser = (AuthenticatedPrincipal) auth.getPrincipal();
 
-        if(authenticatedUser != null) {
-            String jwtToken = tokenService.signToken(authenticatedUser);
+        Users user = usersRepository.findById(Long.valueOf(authenticatedUser.getId()))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(user != null) {
+            String jwtToken = tokenService.signUserToken(user);
             return ResponseEntity.ok(new AuthenticatedUserDTO(
-                    authenticatedUser.getId(), authenticatedUser.getName(), authenticatedUser.getEmail(),
-                    authenticatedUser.getRole().name(), jwtToken
+                    user.getId(), user.getName(), user.getEmail(),
+                    user.getRole().name(), jwtToken
             ));
         }
 
         return null;
+    }
+
+    @PostMapping("/token")
+    @Operation(summary = "Generate token for system integration")
+    public ResponseEntity<TokenResponseDTO> generateToken(@RequestBody @Valid ClientAuthDTO data) {
+        return ResponseEntity.ok(authService.generateToken(data));
     }
 
     @PostMapping("/register")
