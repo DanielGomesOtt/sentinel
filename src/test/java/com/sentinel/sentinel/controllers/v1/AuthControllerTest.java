@@ -5,7 +5,10 @@ import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
 import com.sentinel.sentinel.dto.auth.AuthenticationDTO;
 import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
 import com.sentinel.sentinel.enums.Roles;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
+import com.sentinel.sentinel.models.Organization;
 import com.sentinel.sentinel.models.Users;
+import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
 import com.sentinel.sentinel.repositories.UsersRepository;
 import com.sentinel.sentinel.services.AuthService;
 import com.sentinel.sentinel.services.TokenService;
@@ -17,8 +20,13 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -42,6 +50,9 @@ class AuthControllerTest {
     @MockitoBean
     private UsersRepository usersRepository;
 
+    @MockitoBean
+    private SystemIntegrationRepository systemIntegrationRepository;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -57,15 +68,11 @@ class AuthControllerTest {
                 "123456"
         );
 
-        Users user = new Users(
-                1L,
-                "User",
-                "user@email.com",
-                "encodedPassword",
-                null,
-                Roles.USER,
-                1
-        );
+        AuthenticatedPrincipal principal = new AuthenticatedPrincipal("1", "user@email.com", null,
+                "user", List.of(new SimpleGrantedAuthority("ROLE_ADMIN")), 1L);
+
+        Users user = new Users(1L, "User", "user@email.com", "encoded password",
+                new Organization(1L, "organization", 1), Roles.ADMIN, 1);
 
         Authentication authentication = mock(Authentication.class);
 
@@ -73,7 +80,9 @@ class AuthControllerTest {
                 .thenReturn(authentication);
 
         when(authentication.getPrincipal())
-                .thenReturn(user);
+                .thenReturn(principal);
+
+        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
 
         when(tokenService.signUserToken(user))
                 .thenReturn("fake-jwt-token");
@@ -85,7 +94,7 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("User"))
                 .andExpect(jsonPath("$.email").value("user@email.com"))
-                .andExpect(jsonPath("$.role").value("USER"))
+                .andExpect(jsonPath("$.role").value("ADMIN"))
                 .andExpect(jsonPath("$.token").value("fake-jwt-token"));
     }
 
