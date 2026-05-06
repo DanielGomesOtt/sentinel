@@ -1,6 +1,7 @@
 package com.sentinel.sentinel.controllers.v1;
 
 import com.sentinel.sentinel.dto.incident_history.PaginatedIncidentHistoriesDTO;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.IncidentHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +35,8 @@ public class IncidentHistoryController {
                                                                                @RequestParam(required = false) String from,
                                                                                @RequestParam(required = false) String to,
                                                                                @RequestParam(required = false) Long userId,
-                                                                               @AuthenticationPrincipal Users user ) {
+                                                                               @AuthenticationPrincipal AuthenticatedPrincipal principal ) {
         return ResponseEntity.ok(incidentHistoryService.findHistoriesByParams(page, size, incidentId, newStatus, previousStatus, action,
-                                                                                from, to, userId, user));
+                                                                                from, to, userId, principal));
     }
 }

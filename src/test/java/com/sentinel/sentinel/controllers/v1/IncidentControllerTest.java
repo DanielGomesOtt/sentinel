@@ -1,6 +1,5 @@
 package com.sentinel.sentinel.controllers.v1;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
@@ -14,6 +13,7 @@ import com.sentinel.sentinel.models.Organization;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.IncidentHistoryRepository;
 import com.sentinel.sentinel.repositories.IncidentRepository;
+import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
 import com.sentinel.sentinel.repositories.UsersRepository;
 import com.sentinel.sentinel.services.IncidentService;
 import com.sentinel.sentinel.services.TokenService;
@@ -63,6 +63,9 @@ class IncidentControllerTest {
 
     @MockitoBean
     private UsersRepository usersRepository;
+
+    @MockitoBean
+    private SystemIntegrationRepository systemIntegrationRepository;
 
     @Test
     @DisplayName("create manually should return a created incident with uri")

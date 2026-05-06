@@ -3,9 +3,12 @@ package com.sentinel.sentinel.services;
 import com.sentinel.sentinel.dto.incident_history.CreatedIncidentHistory;
 import com.sentinel.sentinel.dto.incident_history.PaginatedIncidentHistoriesDTO;
 import com.sentinel.sentinel.enums.IncidentStatus;
+import com.sentinel.sentinel.exceptions.UserNotFoundException;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.IncidentHistory;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.IncidentHistoryRepository;
+import com.sentinel.sentinel.repositories.UsersRepository;
 import com.sentinel.sentinel.specifications.IncidentHistorySpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,9 +29,16 @@ public class IncidentHistoryService {
     @Autowired
     private IncidentHistoryRepository incidentHistoryRepository;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
     public PaginatedIncidentHistoriesDTO findHistoriesByParams(int page, int size, Long incidentId, String newStatus,
-                                                       String previousStatus, String action, String from, String to,
-                                                       Long userId, Users user) {
+                                                               String previousStatus, String action, String from, String to,
+                                                               Long userId, AuthenticatedPrincipal principal) {
+
+        Users user = usersRepository.findById(Long.valueOf(principal.getId()))
+                .orElseThrow(() ->  new UserNotFoundException("User not found."));
+
         Long organizationId = user.getOrganization().getId();
 
         if(user.getRole().name().equals("USER")) {

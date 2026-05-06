@@ -4,6 +4,7 @@ import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
 import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
 import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
 import com.sentinel.sentinel.dto.incident.UpdateIncidentDTO;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.IncidentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,8 +31,8 @@ public class IncidentController {
             description = "Creates a new incident manually."
     )
     public ResponseEntity<CreatedIncidentDTO> createManually(@RequestBody @Valid CreateIncidentDTO data,
-                                                             @AuthenticationPrincipal Users user) {
-        CreatedIncidentDTO createdIncident = incidentService.createIncident(data, user);
+                                                             @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+        CreatedIncidentDTO createdIncident = incidentService.createIncident(data, principal);
 
         URI uri = URI.create("/v1/incidents/" + createdIncident.id());
 
@@ -48,8 +49,8 @@ public class IncidentController {
                     + "belonging to their organization."
     )
     public ResponseEntity<CreatedIncidentDTO> findIncidentById(@PathVariable Long id,
-                                                               @AuthenticationPrincipal Users user) {
-        return ResponseEntity.ok().body(incidentService.getIncidentById(id, user));
+                                                               @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+        return ResponseEntity.ok().body(incidentService.getIncidentById(id, principal));
     }
 
     @GetMapping
@@ -68,9 +69,9 @@ public class IncidentController {
                                                          @RequestParam(required = false) String serviceName,
                                                          @RequestParam(required = false) String slaDeadline,
                                                          @RequestParam(required = false) boolean slaViolate,
-                                                         @AuthenticationPrincipal Users user) {
+                                                         @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         return ResponseEntity.ok(incidentService.findAll(page, size, title, description, severity, status, serviceName, slaDeadline,
-                                            slaViolate, user));
+                                            slaViolate, principal));
     }
 
     @PutMapping
@@ -79,7 +80,7 @@ public class IncidentController {
                     "description, severity, status, and related service information."
     )
     public ResponseEntity<UpdateIncidentDTO> updateManually(@RequestBody @Valid UpdateIncidentDTO data,
-                                                            @AuthenticationPrincipal Users user){
-        return ResponseEntity.ok(incidentService.updateIncident(data, user));
+                                                            @AuthenticationPrincipal AuthenticatedPrincipal principal){
+        return ResponseEntity.ok(incidentService.updateIncident(data, principal));
     }
 }

@@ -10,10 +10,8 @@ import com.sentinel.sentinel.enums.Severity;
 import com.sentinel.sentinel.exceptions.IncidentAlreadyClosedException;
 import com.sentinel.sentinel.exceptions.IncidentNotFoundException;
 import com.sentinel.sentinel.exceptions.UserNotAuthenticatedException;
-import com.sentinel.sentinel.models.Incident;
-import com.sentinel.sentinel.models.IncidentHistory;
-import com.sentinel.sentinel.models.SlaRule;
-import com.sentinel.sentinel.models.Users;
+import com.sentinel.sentinel.exceptions.UserNotFoundException;
+import com.sentinel.sentinel.models.*;
 import com.sentinel.sentinel.repositories.*;
 import com.sentinel.sentinel.specifications.IncidentSpecification;
 import jakarta.transaction.Transactional;
@@ -45,12 +43,18 @@ public class IncidentService {
     @Autowired
     private SlaRuleRepository slaRuleRepository;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
 
     @Transactional
-    public CreatedIncidentDTO createIncident(CreateIncidentDTO data, Users user) {
+    public CreatedIncidentDTO createIncident(CreateIncidentDTO data,  AuthenticatedPrincipal principal) {
 
 
-        if(user != null) {
+        if(principal != null) {
+            Users user = usersRepository.findById(Long.valueOf(principal.getId()))
+                    .orElseThrow(() ->  new UserNotFoundException("User not found"));
+
             SlaRule sla = slaRuleRepository.findById(data.severity().name()).get();
             Instant slaInstant = Instant.now().plus(Duration.ofHours(sla.getDurationHours()));
             Incident incident = new Incident(data.title(), data.description(), data.severity(),
@@ -70,11 +74,15 @@ public class IncidentService {
         throw new UserNotAuthenticatedException("The user is not authenticated.");
     }
 
-    public CreatedIncidentDTO getIncidentById(Long incidentId, Users user) {
+    public CreatedIncidentDTO getIncidentById(Long incidentId, AuthenticatedPrincipal principal) {
 
 
         Optional<Incident> incident;
-        if(user != null) {
+        if(principal != null) {
+
+            Users user = usersRepository.findById(Long.valueOf(principal.getId()))
+                    .orElseThrow(() ->  new UserNotFoundException("User not found."));
+
             if (user.getRole().name().equals("USER")) {
                 incident = incidentRepository.findByIdAndCreatedByOrganizationAndCreatedBy(incidentId,
                         user.getOrganization(), user);
@@ -95,7 +103,10 @@ public class IncidentService {
 
     public PaginatedIncidentsDTO findAll(int page, int size, String title, String description, String severity,
                                          String status, String serviceName, String slaDeadline, Boolean slaViolate,
-                                         Users user) {
+                                         AuthenticatedPrincipal principal) {
+
+        Users user = usersRepository.findById(Long.valueOf(principal.getId()))
+                .orElseThrow(() ->  new UserNotFoundException("User not found."));
 
         Long userId = null;
         Long organizationId = user.getOrganization().getId();
@@ -142,7 +153,10 @@ public class IncidentService {
     }
 
     @Transactional
-    public UpdateIncidentDTO updateIncident(@Valid UpdateIncidentDTO data, Users user) {
+    public UpdateIncidentDTO updateIncident(@Valid UpdateIncidentDTO data, AuthenticatedPrincipal principal) {
+
+        Users user = usersRepository.findById(Long.valueOf(principal.getId()))
+                .orElseThrow(() ->  new UserNotFoundException("User not found."));
 
         if(user.getRole() == Roles.TECH && data.incidentStatus() == IncidentStatus.CLOSED){
             data = new UpdateIncidentDTO(data.incidentId(), data.title(), data.description(), data.severity(),
