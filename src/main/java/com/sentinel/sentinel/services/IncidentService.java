@@ -52,8 +52,7 @@ public class IncidentService {
 
 
         if(principal != null) {
-            Users user = usersRepository.findById(Long.valueOf(principal.getId()))
-                    .orElseThrow(() ->  new UserNotFoundException("User not found"));
+            Users user = principal.getUser();
 
             SlaRule sla = slaRuleRepository.findById(data.severity().name()).get();
             Instant slaInstant = Instant.now().plus(Duration.ofHours(sla.getDurationHours()));
@@ -80,8 +79,7 @@ public class IncidentService {
         Optional<Incident> incident;
         if(principal != null) {
 
-            Users user = usersRepository.findById(Long.valueOf(principal.getId()))
-                    .orElseThrow(() ->  new UserNotFoundException("User not found."));
+            Users user = principal.getUser();
 
             if (user.getRole().name().equals("USER")) {
                 incident = incidentRepository.findByIdAndCreatedByOrganizationAndCreatedBy(incidentId,
@@ -105,8 +103,7 @@ public class IncidentService {
                                          String status, String serviceName, String slaDeadline, Boolean slaViolate,
                                          AuthenticatedPrincipal principal) {
 
-        Users user = usersRepository.findById(Long.valueOf(principal.getId()))
-                .orElseThrow(() ->  new UserNotFoundException("User not found."));
+        Users user = principal.getUser();
 
         Long userId = null;
         Long organizationId = user.getOrganization().getId();
@@ -155,8 +152,7 @@ public class IncidentService {
     @Transactional
     public UpdateIncidentDTO updateIncident(@Valid UpdateIncidentDTO data, AuthenticatedPrincipal principal) {
 
-        Users user = usersRepository.findById(Long.valueOf(principal.getId()))
-                .orElseThrow(() ->  new UserNotFoundException("User not found."));
+        Users user = principal.getUser();
 
         if(user.getRole() == Roles.TECH && data.incidentStatus() == IncidentStatus.CLOSED){
             data = new UpdateIncidentDTO(data.incidentId(), data.title(), data.description(), data.severity(),

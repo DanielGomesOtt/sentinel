@@ -14,19 +14,25 @@ public class AuthenticatedPrincipal implements UserDetails {
     private final String type;
     private final Collection<? extends GrantedAuthority> authorities;
     private final Long organizationId;
+    private final Users user;
+    private final SystemIntegration systemIntegration;
 
     public AuthenticatedPrincipal(String id,
                                   String username,
                                   String password,
                                   String type,
                                   Collection<? extends GrantedAuthority> authorities,
-                                  Long organizationId) {
+                                  Long organizationId,
+                                  Users user,
+                                  SystemIntegration systemIntegration) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.type = type;
         this.authorities = authorities;
         this.organizationId = organizationId;
+        this.user = user;
+        this.systemIntegration = systemIntegration;
     }
 
     public String getId() {
@@ -61,6 +67,10 @@ public class AuthenticatedPrincipal implements UserDetails {
     public boolean isTech() {
         return hasRole("ROLE_TECH");
     }
+
+    public Users getUser() {return user;}
+
+    public SystemIntegration getSystemIntegration() {return systemIntegration;}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

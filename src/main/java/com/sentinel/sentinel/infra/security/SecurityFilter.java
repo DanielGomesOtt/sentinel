@@ -87,7 +87,9 @@ public class SecurityFilter extends OncePerRequestFilter {
                 null,
                 claims.get("type").asString(),
                 authorities,
-                user.getOrganization() != null ? user.getOrganization().getId() : null
+                user.getOrganization() != null ? user.getOrganization().getId() : null,
+                user,
+                null
         );
 
         setAuthentication(principal);
@@ -114,7 +116,9 @@ public class SecurityFilter extends OncePerRequestFilter {
                 null,
                 claims.get("type").asString(),
                 authorities,
-                null
+                null,
+                null,
+                client
         );
 
         setAuthentication(principal);

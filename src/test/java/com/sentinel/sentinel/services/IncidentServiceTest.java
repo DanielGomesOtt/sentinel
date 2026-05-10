@@ -103,7 +103,7 @@ class IncidentServiceTest {
         );
 
         this.principal = new AuthenticatedPrincipal("1", "user@email.com", null, "user",
-                List.of(new SimpleGrantedAuthority("ROLE_ADMIN")), 1L);
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN")), 1L, user, null);
     }
 
     @Test
@@ -140,7 +140,6 @@ class IncidentServiceTest {
         );
         savedIncident.setId(10L);
 
-        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
         when(slaRuleRepository.findById(Severity.HIGH.name()))
                 .thenReturn(Optional.of(sla));
         when(incidentRepository.save(any(Incident.class)))
@@ -213,7 +212,6 @@ class IncidentServiceTest {
                 Instant.now()
         );
 
-        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
 
         when(incidentRepository.findByIdAndCreatedByOrganization(1L, user.getOrganization()))
                 .thenReturn(Optional.of(foundIncident));
@@ -246,10 +244,8 @@ class IncidentServiceTest {
 
         AuthenticatedPrincipal userPrincipal = new AuthenticatedPrincipal(
                 "2", "user2@email.com", null, "user",
-                List.of(new SimpleGrantedAuthority("ROLE_USER")), 1L
+                List.of(new SimpleGrantedAuthority("ROLE_USER")), 1L, user2, null
         );
-
-        when(usersRepository.findById(2L)).thenReturn(Optional.of(user2));
 
         when(incidentRepository.
                 findByIdAndCreatedByOrganizationAndCreatedBy(1L, user2.getOrganization(), user2))
@@ -266,8 +262,6 @@ class IncidentServiceTest {
     @Test
     @DisplayName("get incident by id as admin should throw IncidentNotFoundException")
     void getIncidentByIdAsAdminUserShouldThrowIncidentNotFoundException() {
-
-        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
 
         when(incidentRepository.findByIdAndCreatedByOrganization(1L, user.getOrganization()))
                 .thenReturn(Optional.empty());
@@ -286,10 +280,8 @@ class IncidentServiceTest {
 
         AuthenticatedPrincipal userPrincipal = new AuthenticatedPrincipal(
                 "2", "user2@email.com", null, "user",
-                List.of(new SimpleGrantedAuthority("ROLE_USER")), 1L
+                List.of(new SimpleGrantedAuthority("ROLE_USER")), 1L, user2, null
         );
-
-        when(usersRepository.findById(2L)).thenReturn(Optional.of(user2));
 
         when(incidentRepository
                 .findByIdAndCreatedByOrganizationAndCreatedBy(1L, user2.getOrganization(), user2))
@@ -336,8 +328,6 @@ class IncidentServiceTest {
                 1
         );
 
-        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
-
         when(incidentRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(foundIncidents);
 
         PaginatedIncidentsDTO result = incidentService.findAll(0, 10, null, null, null,
@@ -375,8 +365,6 @@ class IncidentServiceTest {
                 Instant.now()
         );
 
-        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
-
         when(incidentRepository.findByIdAndCreatedByOrganization(1L, user.getOrganization()))
                 .thenReturn(Optional.of(incident));
 
@@ -408,8 +396,6 @@ class IncidentServiceTest {
                 "payment-service",
                 IncidentStatus.OPEN
         );
-
-        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
 
         when(incidentRepository.findByIdAndCreatedByOrganization(dto.incidentId(), user.getOrganization()))
                 .thenReturn(Optional.empty());
@@ -449,10 +435,8 @@ class IncidentServiceTest {
 
         AuthenticatedPrincipal techPrincipal = new AuthenticatedPrincipal(
                 "3", "user3@email.com", null, "user",
-                List.of(new SimpleGrantedAuthority("ROLE_TECH")), 1L
+                List.of(new SimpleGrantedAuthority("ROLE_TECH")), 1L, user3, null
         );
-
-        when(usersRepository.findById(3L)).thenReturn(Optional.of(user3));
 
         when(incidentRepository.findByIdAndCreatedByOrganization(1L, user3.getOrganization()))
                 .thenReturn(Optional.of(incident));
@@ -500,8 +484,6 @@ class IncidentServiceTest {
                 Instant.now(),
                 Instant.now()
         );
-
-        when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
 
         when(incidentRepository.findByIdAndCreatedByOrganization(1L, user.getOrganization()))
                 .thenReturn(Optional.of(incident));

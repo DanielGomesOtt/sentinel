@@ -54,7 +54,7 @@ public class AuthService implements UserDetailsService {
                 ));
 
         return new AuthenticatedPrincipal(user.getId().toString(), user.getEmail(), user.getPasswordHash(), "user",
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())), user.getOrganization().getId());
+                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())), user.getOrganization().getId(), user, null);
     }
 
     public AuthenticatedUserDTO register (RegisterUserDTO user) {

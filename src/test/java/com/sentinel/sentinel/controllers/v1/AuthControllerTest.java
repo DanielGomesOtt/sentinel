@@ -68,11 +68,11 @@ class AuthControllerTest {
                 "123456"
         );
 
-        AuthenticatedPrincipal principal = new AuthenticatedPrincipal("1", "user@email.com", null,
-                "user", List.of(new SimpleGrantedAuthority("ROLE_ADMIN")), 1L);
-
         Users user = new Users(1L, "User", "user@email.com", "encoded password",
                 new Organization(1L, "organization", 1), Roles.ADMIN, 1);
+
+        AuthenticatedPrincipal principal = new AuthenticatedPrincipal("1", "user@email.com", null,
+                "user", List.of(new SimpleGrantedAuthority("ROLE_ADMIN")), 1L, user, null);
 
         Authentication authentication = mock(Authentication.class);
 

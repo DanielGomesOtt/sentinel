@@ -36,8 +36,7 @@ public class IncidentHistoryService {
                                                                String previousStatus, String action, String from, String to,
                                                                Long userId, AuthenticatedPrincipal principal) {
 
-        Users user = usersRepository.findById(Long.valueOf(principal.getId()))
-                .orElseThrow(() ->  new UserNotFoundException("User not found."));
+        Users user = principal.getUser();
 
         Long organizationId = user.getOrganization().getId();
 
