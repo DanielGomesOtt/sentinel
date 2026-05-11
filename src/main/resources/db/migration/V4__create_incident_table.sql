@@ -8,11 +8,13 @@ CREATE TABLE incident (
       sla_deadline TIMESTAMP NOT NULL,
       sla_violated BOOLEAN NOT NULL DEFAULT FALSE,
       created_by BIGINT NOT NULL,
+      created_by_system_integration BIGINT NOT NULL,
       organization_id BIGINT NOT NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-      CONSTRAINT fk_incident_user FOREIGN KEY (created_by) REFERENCES users(id)
+      CONSTRAINT fk_incident_user FOREIGN KEY (created_by) REFERENCES users(id),
+      CONSTRAINT fk_incident_system_integration FOREIGN KEY (created_by_system_integration) REFERENCES system_integration(id)
 );
 
 CREATE INDEX idx_incident_status ON incident(status);
