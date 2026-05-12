@@ -1,9 +1,6 @@
 package com.sentinel.sentinel.services;
 
-import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
-import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
-import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
-import com.sentinel.sentinel.dto.incident.UpdateIncidentDTO;
+import com.sentinel.sentinel.dto.incident.*;
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Roles;
 import com.sentinel.sentinel.enums.Severity;
@@ -44,7 +41,7 @@ public class IncidentService {
     private SlaRuleRepository slaRuleRepository;
 
     @Autowired
-    private UsersRepository usersRepository;
+    private IncidentLogRepository incidentLogRepository;
 
 
     @Transactional
@@ -71,6 +68,39 @@ public class IncidentService {
         }
 
         throw new UserNotAuthenticatedException("The user is not authenticated.");
+    }
+
+    @Transactional
+    public CreatedIncidentBySystemIntegrationDTO createIncidentBySystemIntegration(CreateAutomaticIncidentDTO data,
+                                                                      AuthenticatedPrincipal principal) {
+
+
+        if(principal != null) {
+            SystemIntegration systemIntegration = principal.getSystemIntegration();
+
+            SlaRule sla = slaRuleRepository.findById(data.incident().severity().name()).get();
+            Instant slaInstant = Instant.now().plus(Duration.ofHours(sla.getDurationHours()));
+            Incident incident = new Incident(data.incident().title(), data.incident().description(), data.incident().severity(),
+                    IncidentStatus.OPEN, data.incident().serviceName(), slaInstant, false,  systemIntegration,
+                    systemIntegration.getOrganizationId(), Instant.now(), Instant.now());
+
+            Incident createdIncident = incidentRepository.save(incident);
+            IncidentHistory createdIncidentHistory = new IncidentHistory(
+                    createdIncident, null, "OPEN", "create incident",
+                    systemIntegration, incident.getCreatedAt());
+
+            incidentHistoryRepository.save(createdIncidentHistory);
+
+            if(data.incidentLogLevel() != null) {
+                IncidentLog createdIncidentLog = new IncidentLog(createdIncident, data.incidentLogLevel(), data.message(),
+                        data.stacktrace(), createdIncident.getServiceName(), Instant.now());
+                incidentLogRepository.save(createdIncidentLog);
+            }
+
+            return new CreatedIncidentBySystemIntegrationDTO(createdIncident);
+        }
+
+        throw new UserNotAuthenticatedException("System integration is not authenticated.");
     }
 
     public CreatedIncidentDTO getIncidentById(Long incidentId, AuthenticatedPrincipal principal) {

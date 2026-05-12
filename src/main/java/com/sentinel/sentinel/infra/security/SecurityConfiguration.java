@@ -52,7 +52,7 @@ public class SecurityConfiguration {
                     request.requestMatchers(HttpMethod.POST, version + "/users").hasRole(Roles.ADMIN.name());
                     request.requestMatchers(HttpMethod.POST, version + "/systemIntegration").hasRole(Roles.ADMIN.name());
                     request.requestMatchers(HttpMethod.PUT, version + "/incidents").hasRole(Roles.TECH.name());
-                    request.requestMatchers(HttpMethod.GET, version + "/incidents/{id}");
+                    request.requestMatchers(HttpMethod.POST, version + "/incidents/system_integration").hasRole(Roles.SYSTEM.name());
                     request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/v3/api-docs/**").permitAll();
                     request.anyRequest().authenticated();

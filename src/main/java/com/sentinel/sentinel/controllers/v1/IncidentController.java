@@ -1,9 +1,6 @@
 package com.sentinel.sentinel.controllers.v1;
 
-import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
-import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
-import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
-import com.sentinel.sentinel.dto.incident.UpdateIncidentDTO;
+import com.sentinel.sentinel.dto.incident.*;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.IncidentService;
@@ -35,6 +32,22 @@ public class IncidentController {
         CreatedIncidentDTO createdIncident = incidentService.createIncident(data, principal);
 
         URI uri = URI.create("/v1/incidents/" + createdIncident.id());
+
+        return ResponseEntity
+                .created(uri)
+                .body(createdIncident);
+    }
+
+    @PostMapping("/system_integration")
+    @Operation(
+            summary = "Create an incident by system integration.",
+            description = "Creates a new incident by system integration."
+    )
+    public ResponseEntity<CreatedIncidentBySystemIntegrationDTO> createIncidentBySystemIntegration(@RequestBody @Valid CreateAutomaticIncidentDTO data,
+                                                            @AuthenticationPrincipal AuthenticatedPrincipal principal) {
+        CreatedIncidentBySystemIntegrationDTO createdIncident = incidentService.createIncidentBySystemIntegration(data, principal);
+
+        URI uri = URI.create("/v1/incidents/system_integration" + createdIncident.id());
 
         return ResponseEntity
                 .created(uri)

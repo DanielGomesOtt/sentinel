@@ -23,6 +23,9 @@ public class IncidentHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "performed_by")
     private Users performedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "performed_by_system_integration")
+    private SystemIntegration performedBySystemIntegration;
     @Column(name = "created_at")
     private Instant createdAt;
 
@@ -32,6 +35,15 @@ public class IncidentHistory {
         this.newStatus = newStatus;
         this.action = action;
         this.performedBy = performedBy;
+        this.createdAt = createdAt;
+    }
+
+    public IncidentHistory(Incident incidentId, String previousStatus, String newStatus, String action, SystemIntegration performedBySystemIntegration, Instant createdAt) {
+        this.incidentId = incidentId;
+        this.previousStatus = previousStatus;
+        this.newStatus = newStatus;
+        this.action = action;
+        this.performedBySystemIntegration = performedBySystemIntegration;
         this.createdAt = createdAt;
     }
 
@@ -91,6 +103,14 @@ public class IncidentHistory {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public SystemIntegration getPerformedBySystemIntegration() {
+        return performedBySystemIntegration;
+    }
+
+    public void setPerformedBySystemIntegration(SystemIntegration performedBySystemIntegration) {
+        this.performedBySystemIntegration = performedBySystemIntegration;
     }
 
     @Override

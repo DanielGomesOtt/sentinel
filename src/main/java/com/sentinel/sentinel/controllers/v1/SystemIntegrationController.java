@@ -2,6 +2,7 @@ package com.sentinel.sentinel.controllers.v1;
 
 import com.sentinel.sentinel.dto.system_integration.CreateSystemIntegrationDTO;
 import com.sentinel.sentinel.dto.system_integration.CreatedSystemIntegrationDTO;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.SystemIntegrationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,9 +29,9 @@ public class SystemIntegrationController {
 
     @PostMapping
     public ResponseEntity<CreatedSystemIntegrationDTO> create (@RequestBody @Valid CreateSystemIntegrationDTO data,
-                                                               @AuthenticationPrincipal Users user) {
+                                                               @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         CreatedSystemIntegrationDTO createdSystemIntegration = systemIntegrationService.createdSystemIntegration(
-                data, user);
+                data, principal);
 
         URI uri = URI.create("/v1/systemIntegration/" + createdSystemIntegration.id());
 

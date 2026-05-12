@@ -33,6 +33,9 @@ public class Incident {
     @JoinColumn(name = "created_by")
     private Users createdBy;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by_system_integration")
+    private SystemIntegration createdBySystemIntegration;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
     private Organization createdByOrganization;
     @Column(name = "created_at")
@@ -89,6 +92,32 @@ public class Incident {
         this.slaDeadline = slaDeadline;
         this.slaViolate = slaViolate;
         this.createdBy = createdBy;
+        this.createdByOrganization = createdByOrganization;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Incident(
+            String title,
+            String description,
+            Severity severity,
+            IncidentStatus incidentStatus,
+            String serviceName,
+            Instant slaDeadline,
+            boolean slaViolate,
+            SystemIntegration createdBySystemIntegration,
+            Organization createdByOrganization,
+            Instant createdAt,
+            Instant updatedAt) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.severity = severity;
+        this.incidentStatus = incidentStatus;
+        this.serviceName = serviceName;
+        this.slaDeadline = slaDeadline;
+        this.slaViolate = slaViolate;
+        this.createdBySystemIntegration = createdBySystemIntegration;
         this.createdByOrganization = createdByOrganization;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -192,5 +221,21 @@ public class Incident {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public SystemIntegration getCreatedBySystemIntegration() {
+        return createdBySystemIntegration;
+    }
+
+    public void setCreatedBySystemIntegration(SystemIntegration createdBySystemIntegration) {
+        this.createdBySystemIntegration = createdBySystemIntegration;
+    }
+
+    public Organization getCreatedByOrganization() {
+        return createdByOrganization;
+    }
+
+    public void setCreatedByOrganization(Organization createdByOrganization) {
+        this.createdByOrganization = createdByOrganization;
     }
 }

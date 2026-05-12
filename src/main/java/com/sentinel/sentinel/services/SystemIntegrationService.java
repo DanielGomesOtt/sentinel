@@ -2,6 +2,7 @@ package com.sentinel.sentinel.services;
 
 import com.sentinel.sentinel.dto.system_integration.CreateSystemIntegrationDTO;
 import com.sentinel.sentinel.dto.system_integration.CreatedSystemIntegrationDTO;
+import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.SystemIntegration;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
@@ -25,11 +26,13 @@ public class SystemIntegrationService {
     }
 
     @Transactional
-    public CreatedSystemIntegrationDTO createdSystemIntegration(CreateSystemIntegrationDTO data, Users user) {
+    public CreatedSystemIntegrationDTO createdSystemIntegration(CreateSystemIntegrationDTO data, AuthenticatedPrincipal principal) {
         String clientId = UUID.randomUUID().toString();
 
         String clientSecret = SecretGenerator.generate();
         String clientSecretEncoded = passwordEncoder.encode(clientSecret);
+
+        Users user = principal.getUser();
 
         SystemIntegration newSystemIntegration = new SystemIntegration(null, data.name(), clientId,
                 clientSecretEncoded, user.getOrganization(), user, true, Instant.now(), Instant.now(), Instant.now());
