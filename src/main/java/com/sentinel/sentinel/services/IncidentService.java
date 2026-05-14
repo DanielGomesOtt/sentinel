@@ -246,4 +246,18 @@ public class IncidentService {
 
         throw new IncidentNotFoundException("The specified incident was not found.");
     }
+
+    @Transactional
+    public void verifyExpiredSla() {
+        Optional<List<Incident>> incidents = incidentRepository.
+                findBySlaViolateFalseAndSlaDeadlineBeforeAndIncidentStatusNot(Instant.now(), IncidentStatus.CLOSED);
+
+        if(incidents.isPresent()) {
+            incidents.get().forEach(incident ->
+                    incident.setSlaViolate(true)
+            );
+
+            incidentRepository.saveAll(incidents.get());
+        }
+    }
 }
