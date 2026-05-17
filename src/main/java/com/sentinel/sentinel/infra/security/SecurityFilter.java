@@ -60,7 +60,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 }
 
             } catch (Exception exception) {
-                throw new JWTVerificationException(exception.getMessage(), exception);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
         }
 

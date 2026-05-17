@@ -8,6 +8,7 @@ import com.sentinel.sentinel.services.SystemIntegrationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ public class SystemIntegrationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreatedSystemIntegrationDTO> create (@RequestBody @Valid CreateSystemIntegrationDTO data,
                                                                @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         CreatedSystemIntegrationDTO createdSystemIntegration = systemIntegrationService.createdSystemIntegration(

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,7 @@ public class IncidentController {
             summary = "Create an incident by system integration.",
             description = "Creates a new incident by system integration."
     )
+    @PreAuthorize("hasRole('SYSTEM')")
     public ResponseEntity<CreatedIncidentBySystemIntegrationDTO> createIncidentBySystemIntegration(@RequestBody @Valid CreateAutomaticIncidentDTO data,
                                                             @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         CreatedIncidentBySystemIntegrationDTO createdIncident = incidentService.createIncidentBySystemIntegration(data, principal);
@@ -92,6 +94,7 @@ public class IncidentController {
             description = "Updates an existing incident by its ID. Allows modification of fields such as title, " +
                     "description, severity, status, and related service information."
     )
+    @PreAuthorize("hasRole('TECH')")
     public ResponseEntity<UpdateIncidentDTO> updateManually(@RequestBody @Valid UpdateIncidentDTO data,
                                                             @AuthenticationPrincipal AuthenticatedPrincipal principal){
         return ResponseEntity.ok(incidentService.updateIncident(data, principal));

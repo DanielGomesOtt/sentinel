@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,18 +22,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.HttpStatusAccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     @Autowired
     private SecurityFilter securityFilter;
-
-    @Autowired
-    private SecurityExceptionHandler securityExceptionHandler;
 
     @Value("${api.version}")
     private String API_VERSION;
@@ -41,18 +43,20 @@ public class SecurityConfiguration {
         String version  = ApiVersionUtil.normalize(this.API_VERSION);
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(securityExceptionHandler))
+                .exceptionHandling(exception -> {
+                    exception.authenticationEntryPoint((req, res, ex) -> {
+                        res.setStatus(401);
+                    });
+                    exception.accessDeniedHandler((req, res, ex) -> {
+                        res.setStatus(403);
+                    });
+                })
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(HttpMethod.POST, version + "/auth/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/auth/login").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/auth/token").permitAll();
-                    request.requestMatchers(HttpMethod.POST, version + "/users").hasRole(Roles.ADMIN.name());
-                    request.requestMatchers(HttpMethod.POST, version + "/systemIntegration").hasRole(Roles.ADMIN.name());
-                    request.requestMatchers(HttpMethod.PUT, version + "/incidents").hasRole(Roles.TECH.name());
-                    request.requestMatchers(HttpMethod.POST, version + "/incidents/system_integration").hasRole(Roles.SYSTEM.name());
                     request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/v3/api-docs/**").permitAll();
                     request.anyRequest().authenticated();
@@ -80,11 +84,14 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+    public static MethodSecurityExpressionHandler methodSecurityExpressionHandler(
+            RoleHierarchy roleHierarchy) {
+
         DefaultMethodSecurityExpressionHandler handler =
                 new DefaultMethodSecurityExpressionHandler();
 
         handler.setRoleHierarchy(roleHierarchy);
+
         return handler;
     }
 }
