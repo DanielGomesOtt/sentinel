@@ -16,7 +16,7 @@ public class IncidentScheduler {
         this.incidentService = incidentService;
     }
 
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void verifyExpiredSla() {
         try {
             incidentService.verifyExpiredSla();

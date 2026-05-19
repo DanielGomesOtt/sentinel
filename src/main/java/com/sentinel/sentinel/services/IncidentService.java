@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -257,7 +258,14 @@ public class IncidentService {
                     incident.setSlaViolate(true)
             );
 
-            incidentRepository.saveAll(incidents.get());
+            List<Incident> updatedIncidents = incidentRepository.saveAll(incidents.get());
+
+            List<IncidentHistory> incidentsHistories = new ArrayList<>();
+            for (Incident incident : updatedIncidents) {
+                incidentsHistories.add(new IncidentHistory(incident, incident.getIncidentStatus(),
+                        incident.getIncidentStatus(), "sla violated", Instant.now()));
+            }
+            incidentHistoryRepository.saveAll(incidentsHistories);
         }
     }
 }

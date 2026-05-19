@@ -1,5 +1,6 @@
 package com.sentinel.sentinel.models;
 
+import com.sentinel.sentinel.enums.IncidentStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -48,6 +49,14 @@ public class IncidentHistory {
     }
 
     public IncidentHistory() {}
+
+    public IncidentHistory(Incident incidentId, IncidentStatus previousStatus, IncidentStatus newStatus, String action, Instant now) {
+        this.incidentId = incidentId;
+        this.previousStatus = previousStatus.name();
+        this.newStatus = newStatus.name();
+        this.action = action;
+        this.createdAt = now;
+    }
 
     public Long getId() {
         return id;
