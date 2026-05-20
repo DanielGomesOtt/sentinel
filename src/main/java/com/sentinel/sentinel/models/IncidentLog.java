@@ -26,6 +26,8 @@ public class IncidentLog {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    public IncidentLog() {}
+
     public IncidentLog(Incident incidentId, IncidentLogLevel level, String message, String stacktrace, String serviceName, Instant createdAt) {
         this.incidentId = incidentId;
         this.level = level;

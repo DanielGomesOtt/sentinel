@@ -5,6 +5,8 @@ import com.sentinel.sentinel.dto.system_integration.CreatedSystemIntegrationDTO;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.SystemIntegrationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/v1/systemIntegration")
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "System Integration", description = "Here are the requests used to perform the functionality related to system integrations.")
 public class SystemIntegrationController {
 
@@ -30,6 +33,10 @@ public class SystemIntegrationController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Create a system integration",
+            description = "Creates a new system integration and generates the required credentials for external system communication."
+    )
     public ResponseEntity<CreatedSystemIntegrationDTO> create (@RequestBody @Valid CreateSystemIntegrationDTO data,
                                                                @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         CreatedSystemIntegrationDTO createdSystemIntegration = systemIntegrationService.createdSystemIntegration(

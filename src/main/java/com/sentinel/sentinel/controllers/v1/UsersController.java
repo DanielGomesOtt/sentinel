@@ -4,6 +4,7 @@ import com.sentinel.sentinel.dto.users.CreateUserDTO;
 import com.sentinel.sentinel.dto.users.CreatedUserDTO;
 import com.sentinel.sentinel.services.UsersService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/users")
 @Tag(name = "Users", description = "Here are the requests used to perform the functionality related to users.")
+@SecurityRequirement(name = "bearerAuth")
 public class UsersController {
 
     @Autowired
