@@ -1,9 +1,8 @@
 package com.sentinel.sentinel.services;
 
-import com.sentinel.sentinel.dto.incident_history.CreatedIncidentHistory;
+import com.sentinel.sentinel.dto.incident_history.CreatedIncidentHistoryDTO;
 import com.sentinel.sentinel.dto.incident_history.PaginatedIncidentHistoriesDTO;
 import com.sentinel.sentinel.enums.IncidentStatus;
-import com.sentinel.sentinel.exceptions.UserNotFoundException;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.IncidentHistory;
 import com.sentinel.sentinel.models.Users;
@@ -77,12 +76,13 @@ public class IncidentHistoryService {
                 .and(IncidentHistorySpecification.previousStatus(previousStatusEnum))
                 .and(IncidentHistorySpecification.action(action))
                 .and(IncidentHistorySpecification.from(fromInstant))
-                .and(IncidentHistorySpecification.to(toInstant));
+                .and(IncidentHistorySpecification.to(toInstant))
+                .and(IncidentHistorySpecification.OrganizationId(organizationId));
 
         Page<IncidentHistory> incidentHistories = incidentHistoryRepository.findAll(spec, pagination);
 
-        List<CreatedIncidentHistory> formattedIncidentHistories = incidentHistories.getContent().stream()
-                .map(CreatedIncidentHistory::new).toList();
+        List<CreatedIncidentHistoryDTO> formattedIncidentHistories = incidentHistories.getContent().stream()
+                .map(CreatedIncidentHistoryDTO::new).toList();
 
         return new PaginatedIncidentHistoriesDTO(formattedIncidentHistories, incidentHistories.isFirst(), incidentHistories.isLast(),
                 incidentHistories.getNumber(), incidentHistories.getNumberOfElements(), incidentHistories.getSize(),

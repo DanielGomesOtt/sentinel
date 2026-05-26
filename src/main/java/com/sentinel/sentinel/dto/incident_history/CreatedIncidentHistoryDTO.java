@@ -2,7 +2,7 @@ package com.sentinel.sentinel.dto.incident_history;
 
 import com.sentinel.sentinel.models.IncidentHistory;
 
-public record CreatedIncidentHistory(
+public record CreatedIncidentHistoryDTO(
         Long id,
         Long incidentId,
         String previousStatus,
@@ -12,7 +12,7 @@ public record CreatedIncidentHistory(
         String createdAt
 ) {
 
-    public CreatedIncidentHistory(IncidentHistory incidentHistory) {
+    public CreatedIncidentHistoryDTO(IncidentHistory incidentHistory) {
         this(incidentHistory.getId(), incidentHistory.getIncidentId().getId(), incidentHistory.getPreviousStatus(),
                 incidentHistory.getNewStatus(), incidentHistory.getAction(),  incidentHistory.getPerformedBy().getId(),
                 incidentHistory.getCreatedAt().toString());

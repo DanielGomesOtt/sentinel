@@ -1,9 +1,9 @@
-package com.sentinel.sentinel.dto.incident_history;
+package com.sentinel.sentinel.dto.incident_log;
 
 import java.util.List;
 
-public record PaginatedIncidentHistoriesDTO(
-        List<CreatedIncidentHistoryDTO> incidentHistories,
+public record PaginatedIncidentLogsDTO(
+        List<CreatedIncidentLogDTO> incidentLogs,
         boolean first,
         boolean last,
         int page,
