@@ -44,4 +44,10 @@ public class RestErrorHandler {
         RestErrorMessage error = new RestErrorMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+
+    @ExceptionHandler(IncidentStatusConflictException.class)
+    public ResponseEntity<RestErrorMessage> handleIncidentStatusConflictException(IncidentStatusConflictException ex) {
+        RestErrorMessage error = new RestErrorMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }

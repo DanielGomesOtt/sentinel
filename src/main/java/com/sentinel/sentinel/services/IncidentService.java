@@ -4,10 +4,7 @@ import com.sentinel.sentinel.dto.incident.*;
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Roles;
 import com.sentinel.sentinel.enums.Severity;
-import com.sentinel.sentinel.exceptions.IncidentAlreadyClosedException;
-import com.sentinel.sentinel.exceptions.IncidentNotFoundException;
-import com.sentinel.sentinel.exceptions.UserNotAuthenticatedException;
-import com.sentinel.sentinel.exceptions.UserNotFoundException;
+import com.sentinel.sentinel.exceptions.*;
 import com.sentinel.sentinel.models.*;
 import com.sentinel.sentinel.repositories.*;
 import com.sentinel.sentinel.specifications.IncidentSpecification;
@@ -199,6 +196,12 @@ public class IncidentService {
 
             previousStatus = incident.get().getIncidentStatus().name();
 
+            if(user.getRole() != Roles.ADMIN && data.incidentStatus() != null &&
+                    !IncidentStatus.OPEN.validateIncidentStatusSort(
+                            IncidentStatus.valueOf(previousStatus),
+                            data.incidentStatus())) {
+                    throw new IncidentStatusConflictException("Skipping incident statuses is not allowed.");
+            }
 
             if(incident.get().getIncidentStatus() == IncidentStatus.CLOSED){
                 throw new IncidentAlreadyClosedException("Incident is already closed and cannot be updated.");
