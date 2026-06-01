@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -100,5 +102,26 @@ public class IncidentController {
     public ResponseEntity<UpdateIncidentDTO> updateManually(@RequestBody @Valid UpdateIncidentDTO data,
                                                             @AuthenticationPrincipal AuthenticatedPrincipal principal){
         return ResponseEntity.ok(incidentService.updateIncident(data, principal));
+    }
+
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> generatePdf(@RequestParam(required = true) int page,
+                                              @RequestParam(required = true) int size,
+                                              @RequestParam(required = false) String title,
+                                              @RequestParam(required = false) String description,
+                                              @RequestParam(required = false) String severity,
+                                              @RequestParam(required = false) String status,
+                                              @RequestParam(required = false) String serviceName,
+                                              @RequestParam(required = false) String slaDeadline,
+                                              @RequestParam(required = false) boolean slaViolate,
+                                              @AuthenticationPrincipal AuthenticatedPrincipal principal) throws Exception {
+        byte[] pdf = incidentService.generateIncidentsPdf(page, size, title, description, severity, status, serviceName, slaDeadline,
+                slaViolate, principal);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=incidents.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }

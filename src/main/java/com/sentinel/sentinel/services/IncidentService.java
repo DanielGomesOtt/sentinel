@@ -8,6 +8,7 @@ import com.sentinel.sentinel.exceptions.*;
 import com.sentinel.sentinel.models.*;
 import com.sentinel.sentinel.repositories.*;
 import com.sentinel.sentinel.specifications.IncidentSpecification;
+import com.sentinel.sentinel.utils.PdfTableGenerator;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,6 +178,52 @@ public class IncidentService {
                 incidents.getTotalElements(), incidents.getTotalPages());
     }
 
+    public List<IncidentPdfDTO> findAllToPdfReport(int page, int size, String title, String description, String severity,
+                                         String status, String serviceName, String slaDeadline, Boolean slaViolate,
+                                         AuthenticatedPrincipal principal) {
+
+        Users user = principal.getUser();
+
+        Long userId = null;
+        Long organizationId = user.getOrganization().getId();
+
+        if(user.getRole().name().equals("USER")) {
+            userId = user.getId();
+        }
+
+        Pageable pagination = PageRequest.of(page, size);
+        Severity severityEnum = null;
+        IncidentStatus statusEnum = null;
+        Instant slaDeadlineInstant = null;
+        if(severity != null) {
+            severityEnum = Severity.valueOf(severity.toUpperCase());
+        }
+
+        if(status != null) {
+            statusEnum = IncidentStatus.valueOf(status.toUpperCase());
+        }
+
+        if(slaDeadline != null) {
+            slaDeadlineInstant = LocalDateTime
+                    .parse(slaDeadline, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    .toInstant(ZoneOffset.UTC);
+        }
+        Specification<Incident> spec = Specification
+                .where(IncidentSpecification.organizationId(organizationId))
+                .and(IncidentSpecification.userId(userId))
+                .and(IncidentSpecification.title(title))
+                .and(IncidentSpecification.description(description))
+                .and(IncidentSpecification.severity(severityEnum))
+                .and(IncidentSpecification.status(statusEnum))
+                .and(IncidentSpecification.serviceName(serviceName))
+                .and(IncidentSpecification.slaDeadline(slaDeadlineInstant))
+                .and(IncidentSpecification.slaViolated(slaViolate));
+
+        Page<Incident> incidents = incidentRepository.findAll(spec, pagination);
+        return incidents.getContent().stream()
+                .map(IncidentPdfDTO::new).toList();
+    }
+
     @Transactional
     public UpdateIncidentDTO updateIncident(@Valid UpdateIncidentDTO data, AuthenticatedPrincipal principal) {
 
@@ -270,5 +317,23 @@ public class IncidentService {
             }
             incidentHistoryRepository.saveAll(incidentsHistories);
         }
+    }
+
+    public byte[] generateIncidentsPdf(int page, int size, String title, String description, String severity,
+                                       String status, String serviceName, String slaDeadline, Boolean slaViolate,
+                                       AuthenticatedPrincipal principal) throws Exception {
+
+        List<IncidentPdfDTO> incidents = findAllToPdfReport(
+                page, size, title, description, severity, status, serviceName,
+                slaDeadline, slaViolate, principal);
+
+        if(!incidents.isEmpty()) {
+            PdfTableGenerator generator = new PdfTableGenerator();
+            String titleReport = "Incidents Report";
+
+            return generator.generatePdf(incidents, titleReport);
+        }
+
+        throw new IncidentNotFoundException("No incidents were found.");
     }
 }
