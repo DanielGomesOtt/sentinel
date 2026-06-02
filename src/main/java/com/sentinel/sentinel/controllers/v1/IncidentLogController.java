@@ -6,6 +6,8 @@ import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.services.IncidentLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +57,34 @@ public class IncidentLogController {
                         principal
                 )
         );
+    }
+
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> generatePdf(@RequestParam int page,
+                                              @RequestParam int size,
+                                              @RequestParam(required = false) Long incidentId,
+                                              @RequestParam(required = false) IncidentLogLevel incidentLogLevel,
+                                              @RequestParam(required = false) String message,
+                                              @RequestParam(required = false) String serviceName,
+                                              @RequestParam(required = false) Instant from,
+                                              @RequestParam(required = false) Instant to,
+                                              @RequestParam(required = false) Long userId,
+                                              @AuthenticationPrincipal AuthenticatedPrincipal principal) throws Exception {
+        byte[] pdf = incidentLogService.generateIncidentLogPdf(page,
+                size,
+                incidentId,
+                incidentLogLevel,
+                message,
+                serviceName,
+                from,
+                to,
+                userId,
+                principal);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=incident_log.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }
