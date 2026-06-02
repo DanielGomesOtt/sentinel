@@ -7,6 +7,8 @@ import com.sentinel.sentinel.services.IncidentHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,4 +43,27 @@ public class IncidentHistoryController {
         return ResponseEntity.ok(incidentHistoryService.findHistoriesByParams(page, size, incidentId, newStatus, previousStatus, action,
                                                                                 from, to, userId, principal));
     }
+
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> generatePdf(@RequestParam(required = true) int page,
+                                              @RequestParam(required = true) int size,
+                                              @RequestParam(required = true) Long incidentId,
+                                              @RequestParam(required = false) String newStatus,
+                                              @RequestParam(required = false) String previousStatus,
+                                              @RequestParam(required = false) String action,
+                                              @RequestParam(required = false) String from,
+                                              @RequestParam(required = false) String to,
+                                              @RequestParam(required = false) Long userId,
+                                              @AuthenticationPrincipal AuthenticatedPrincipal principal ) throws Exception {
+        byte[] pdf = incidentHistoryService.generateIncidentHistoryPdf(page, size, incidentId, newStatus, previousStatus, action,
+                from, to, userId, principal);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=incident_history.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+
 }
