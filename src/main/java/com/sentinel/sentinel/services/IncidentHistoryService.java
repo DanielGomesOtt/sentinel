@@ -1,6 +1,5 @@
 package com.sentinel.sentinel.services;
 
-import com.sentinel.sentinel.dto.incident.IncidentPdfDTO;
 import com.sentinel.sentinel.dto.incident_history.CreatedIncidentHistoryDTO;
 import com.sentinel.sentinel.dto.incident_history.IncidentHistoryPdfDTO;
 import com.sentinel.sentinel.dto.incident_history.PaginatedIncidentHistoriesDTO;

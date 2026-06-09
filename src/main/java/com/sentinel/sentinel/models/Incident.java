@@ -3,11 +3,9 @@ package com.sentinel.sentinel.models;
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Severity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @Table(name = "incident")

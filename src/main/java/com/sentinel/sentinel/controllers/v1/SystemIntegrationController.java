@@ -3,7 +3,6 @@ package com.sentinel.sentinel.controllers.v1;
 import com.sentinel.sentinel.dto.system_integration.CreateSystemIntegrationDTO;
 import com.sentinel.sentinel.dto.system_integration.CreatedSystemIntegrationDTO;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
-import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.SystemIntegrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -46,4 +45,6 @@ public class SystemIntegrationController {
 
         return ResponseEntity.created(uri).body(createdSystemIntegration);
     }
+
+
 }

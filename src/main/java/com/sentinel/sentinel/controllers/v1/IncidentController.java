@@ -2,7 +2,6 @@ package com.sentinel.sentinel.controllers.v1;
 
 import com.sentinel.sentinel.dto.incident.*;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
-import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.services.IncidentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

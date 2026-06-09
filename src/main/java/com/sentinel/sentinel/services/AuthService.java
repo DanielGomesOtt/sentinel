@@ -14,8 +14,6 @@ import com.sentinel.sentinel.repositories.OrganizationRepository;
 import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
 import com.sentinel.sentinel.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

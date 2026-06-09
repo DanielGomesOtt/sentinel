@@ -1,6 +1,5 @@
 package com.sentinel.sentinel.services;
 
-import com.sentinel.sentinel.dto.incident.IncidentPdfDTO;
 import com.sentinel.sentinel.dto.incident_log.CreatedIncidentLogDTO;
 import com.sentinel.sentinel.dto.incident_log.IncidentLogPdfDTO;
 import com.sentinel.sentinel.dto.incident_log.PaginatedIncidentLogsDTO;
@@ -12,7 +11,6 @@ import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.IncidentLogRepository;
 import com.sentinel.sentinel.specifications.IncidentLogSpecification;
 import com.sentinel.sentinel.utils.IncidentLogPdfGenerator;
-import com.sentinel.sentinel.utils.PdfTableGenerator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
