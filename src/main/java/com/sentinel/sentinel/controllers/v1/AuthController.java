@@ -5,6 +5,7 @@ import com.sentinel.sentinel.dto.auth.AuthenticationDTO;
 import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
 import com.sentinel.sentinel.dto.system_integration.ClientAuthDTO;
 import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
+import com.sentinel.sentinel.exceptions.UserNotFoundException;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
@@ -56,17 +57,14 @@ public class AuthController {
         AuthenticatedPrincipal authenticatedUser = (AuthenticatedPrincipal) auth.getPrincipal();
 
         Users user = usersRepository.findById(Long.valueOf(authenticatedUser.getId()))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if(user != null) {
-            String jwtToken = tokenService.signUserToken(user);
-            return ResponseEntity.ok(new AuthenticatedUserDTO(
-                    user.getId(), user.getName(), user.getEmail(),
-                    user.getRole().name(), jwtToken
-            ));
-        }
 
-        return null;
+        String jwtToken = tokenService.signUserToken(user);
+        return ResponseEntity.ok(new AuthenticatedUserDTO(
+                user.getId(), user.getName(), user.getEmail(),
+                user.getRole().name(), jwtToken
+        ));
     }
 
     @PostMapping("/token")

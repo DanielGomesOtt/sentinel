@@ -1,10 +1,14 @@
 package com.sentinel.sentinel.controllers.v1;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
 import com.sentinel.sentinel.dto.auth.AuthenticationDTO;
 import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
+import com.sentinel.sentinel.dto.system_integration.ClientAuthDTO;
+import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
 import com.sentinel.sentinel.enums.Roles;
+import com.sentinel.sentinel.exceptions.UserNotFoundException;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Organization;
 import com.sentinel.sentinel.models.Users;
@@ -99,6 +103,38 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("login should throw UserNotFoundException")
+    void loginShouldThrowUserNotFoundException() throws Exception {
+
+        AuthenticationDTO request = new AuthenticationDTO(
+                "user@email.com",
+                "123456"
+        );
+
+        Users user = new Users(1L, "User", "user@email.com", "encoded password",
+                new Organization(1L, "organization", 1), Roles.ADMIN, 1);
+
+        AuthenticatedPrincipal principal = new AuthenticatedPrincipal("1", "user@email.com", null,
+                "user", List.of(new SimpleGrantedAuthority("ROLE_ADMIN")), 1L, user, null);
+
+        Authentication authentication = mock(Authentication.class);
+
+        when(authenticationManager.authenticate(any()))
+                .thenReturn(authentication);
+
+        when(authentication.getPrincipal())
+                .thenReturn(principal);
+
+        when(usersRepository.findById(1L))
+                .thenThrow(new UserNotFoundException("User not found"));
+
+        mockMvc.perform(post("/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     @DisplayName("register should return 201 created")
     void registerShouldReturn201Created() throws Exception {
 
@@ -127,5 +163,21 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.email").value("user@email.com"))
                 .andExpect(jsonPath("$.role").value("USER"))
                 .andExpect(jsonPath("$.token").value("token"));
+    }
+
+    @Test
+    @DisplayName("generate token should return a token for system integration")
+    void generateTokenShouldReturnToken() throws Exception {
+        ClientAuthDTO request = new ClientAuthDTO("client_id", "client_secret");
+        TokenResponseDTO response = new TokenResponseDTO("accessToken");
+
+        when(authService.generateToken(request)).thenReturn(response);
+
+        mockMvc.perform(post("/v1/auth/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.accessToken").value("accessToken"));
+
     }
 }
