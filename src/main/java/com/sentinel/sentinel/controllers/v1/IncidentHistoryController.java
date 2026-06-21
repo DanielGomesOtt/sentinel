@@ -5,7 +5,6 @@ import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.services.IncidentHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "bearerAuth")
 public class IncidentHistoryController {
 
-    @Autowired
-    private IncidentHistoryService incidentHistoryService;
+    private final IncidentHistoryService incidentHistoryService;
+
+    public IncidentHistoryController(IncidentHistoryService incidentHistoryService) {
+        this.incidentHistoryService = incidentHistoryService;
+    }
 
     @GetMapping
     @Operation(

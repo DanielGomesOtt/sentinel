@@ -1,6 +1,5 @@
 package com.sentinel.sentinel.dto.system_integration;
 
-import com.sentinel.sentinel.models.SystemIntegration;
 
 import java.time.Instant;
 

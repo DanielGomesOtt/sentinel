@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,6 +37,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -328,7 +330,10 @@ class IncidentServiceTest {
                 1
         );
 
-        when(incidentRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(foundIncidents);
+        when(incidentRepository.findAll(
+                ArgumentMatchers.<Specification<Incident>>any(),
+                any(Pageable.class)
+        )).thenReturn(foundIncidents);
 
         PaginatedIncidentsDTO result = incidentService.findAll(0, 10, null, null, null,
                 null, null, null, null, principal);

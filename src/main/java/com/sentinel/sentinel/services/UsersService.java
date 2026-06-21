@@ -9,7 +9,6 @@ import com.sentinel.sentinel.models.Organization;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.OrganizationRepository;
 import com.sentinel.sentinel.repositories.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +17,17 @@ import java.util.Optional;
 @Service
 public class UsersService {
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
-    @Autowired
-    private OrganizationRepository organizationRepository;
+    private final OrganizationRepository organizationRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public UsersService(UsersRepository usersRepository, OrganizationRepository organizationRepository, PasswordEncoder passwordEncoder) {
+        this.usersRepository = usersRepository;
+        this.organizationRepository = organizationRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public CreatedUserDTO create(CreateUserDTO data) {
         Optional<Users> alreadyExists = usersRepository.findByEmailAndStatus(data.email(), 1);

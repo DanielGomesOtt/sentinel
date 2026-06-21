@@ -107,7 +107,6 @@ public class Incident {
             Organization createdByOrganization,
             Instant createdAt,
             Instant updatedAt) {
-        this.id = id;
         this.title = title;
         this.description = description;
         this.severity = severity;

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,11 @@ import java.net.URI;
 @Tag(name = "Incidents", description = "Here are the requests used to perform the functionality related to incidents.")
 public class IncidentController {
 
-    @Autowired
-    private IncidentService incidentService;
+    private final IncidentService incidentService;
+
+    public IncidentController(IncidentService incidentService) {
+        this.incidentService = incidentService;
+    }
 
     @PostMapping
     @Operation(

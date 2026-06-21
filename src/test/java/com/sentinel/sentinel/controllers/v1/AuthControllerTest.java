@@ -1,6 +1,5 @@
 package com.sentinel.sentinel.controllers.v1;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
 import com.sentinel.sentinel.dto.auth.AuthenticationDTO;

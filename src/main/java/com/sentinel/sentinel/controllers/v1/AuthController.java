@@ -8,14 +8,12 @@ import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
 import com.sentinel.sentinel.exceptions.UserNotFoundException;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.Users;
-import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
 import com.sentinel.sentinel.repositories.UsersRepository;
 import com.sentinel.sentinel.services.AuthService;
 import com.sentinel.sentinel.services.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,20 +30,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication", description = "Here are the requests used to perform login and registration.")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
-    @Autowired
-    private SystemIntegrationRepository systemIntegrationRepository;
+
+    public AuthController(UsersRepository usersRepository, AuthService authService, TokenService tokenService, AuthenticationManager authenticationManager) {
+        this.usersRepository = usersRepository;
+        this.authService = authService;
+        this.tokenService = tokenService;
+        this.authenticationManager = authenticationManager;
+    }
 
     @PostMapping("/login")
     @Operation(summary = "Login endpoint", description = "Authenticates a user and returns an access token.")

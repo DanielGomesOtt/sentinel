@@ -9,10 +9,8 @@ import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.models.IncidentHistory;
 import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.IncidentHistoryRepository;
-import com.sentinel.sentinel.repositories.UsersRepository;
 import com.sentinel.sentinel.specifications.IncidentHistorySpecification;
 import com.sentinel.sentinel.utils.PdfTableGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +26,11 @@ import java.util.List;
 @Service
 public class IncidentHistoryService {
 
-    @Autowired
-    private IncidentHistoryRepository incidentHistoryRepository;
+    private final IncidentHistoryRepository incidentHistoryRepository;
 
-    @Autowired
-    private UsersRepository usersRepository;
+    public IncidentHistoryService(IncidentHistoryRepository incidentHistoryRepository) {
+        this.incidentHistoryRepository = incidentHistoryRepository;
+    }
 
     public PaginatedIncidentHistoriesDTO findHistoriesByParams(int page, int size, Long incidentId, String newStatus,
                                                                String previousStatus, String action, String from, String to,

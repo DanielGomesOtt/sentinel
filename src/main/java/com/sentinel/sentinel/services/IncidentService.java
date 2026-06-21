@@ -10,8 +10,6 @@ import com.sentinel.sentinel.repositories.*;
 import com.sentinel.sentinel.specifications.IncidentSpecification;
 import com.sentinel.sentinel.utils.PdfTableGenerator;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,17 +28,21 @@ import java.util.Optional;
 @Service
 public class IncidentService {
 
-    @Autowired
-    private IncidentRepository incidentRepository;
+    private final IncidentRepository incidentRepository;
 
-    @Autowired
-    private IncidentHistoryRepository incidentHistoryRepository;
+    private final IncidentHistoryRepository incidentHistoryRepository;
 
-    @Autowired
-    private SlaRuleRepository slaRuleRepository;
+    private final SlaRuleRepository slaRuleRepository;
 
-    @Autowired
-    private IncidentLogRepository incidentLogRepository;
+    private final IncidentLogRepository incidentLogRepository;
+
+
+    public IncidentService(IncidentRepository incidentRepository, IncidentHistoryRepository incidentHistoryRepository, SlaRuleRepository slaRuleRepository, IncidentLogRepository incidentLogRepository) {
+        this.incidentRepository = incidentRepository;
+        this.incidentHistoryRepository = incidentHistoryRepository;
+        this.slaRuleRepository = slaRuleRepository;
+        this.incidentLogRepository = incidentLogRepository;
+    }
 
 
     @Transactional
@@ -225,7 +227,7 @@ public class IncidentService {
     }
 
     @Transactional
-    public UpdateIncidentDTO updateIncident(@Valid UpdateIncidentDTO data, AuthenticatedPrincipal principal) {
+    public UpdateIncidentDTO updateIncident(UpdateIncidentDTO data, AuthenticatedPrincipal principal) {
 
         Users user = principal.getUser();
 

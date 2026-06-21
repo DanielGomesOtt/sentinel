@@ -197,7 +197,6 @@ class AuthServiceTest {
         String hashedSecret = "invalid hashed secret";
         systemIntegration.setClientSecretHash(hashedSecret);
         systemIntegration.setActive(true);
-        String token = "access token";
 
         when(systemIntegrationRepository.findByClientId(data.clientId()))
                 .thenReturn(Optional.of(systemIntegration));

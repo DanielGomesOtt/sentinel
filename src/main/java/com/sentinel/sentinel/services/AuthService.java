@@ -13,7 +13,6 @@ import com.sentinel.sentinel.models.Users;
 import com.sentinel.sentinel.repositories.OrganizationRepository;
 import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
 import com.sentinel.sentinel.repositories.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,20 +27,24 @@ import java.util.Optional;
 @Service
 public class AuthService implements UserDetailsService {
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
-    @Autowired
-    private OrganizationRepository organizationRepository;
+    private final OrganizationRepository organizationRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private SystemIntegrationRepository systemIntegrationRepository;
+    private final SystemIntegrationRepository systemIntegrationRepository;
+
+
+    public AuthService(SystemIntegrationRepository systemIntegrationRepository, TokenService tokenService, PasswordEncoder passwordEncoder, OrganizationRepository organizationRepository, UsersRepository usersRepository) {
+        this.systemIntegrationRepository = systemIntegrationRepository;
+        this.tokenService = tokenService;
+        this.passwordEncoder = passwordEncoder;
+        this.organizationRepository = organizationRepository;
+        this.usersRepository = usersRepository;
+    }
 
 
     @Override
