@@ -54,7 +54,7 @@ public class IncidentController {
                                                             @AuthenticationPrincipal AuthenticatedPrincipal principal) {
         CreatedIncidentBySystemIntegrationDTO createdIncident = incidentService.createIncidentBySystemIntegration(data, principal);
 
-        URI uri = URI.create("/v1/incidents/system_integration" + createdIncident.id());
+        URI uri = URI.create("/v1/incidents/system_integration/" + createdIncident.id());
 
         return ResponseEntity
                 .created(uri)

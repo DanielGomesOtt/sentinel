@@ -1,10 +1,9 @@
 package com.sentinel.sentinel.controllers.v1;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sentinel.sentinel.dto.incident.CreateIncidentDTO;
-import com.sentinel.sentinel.dto.incident.CreatedIncidentDTO;
-import com.sentinel.sentinel.dto.incident.PaginatedIncidentsDTO;
-import com.sentinel.sentinel.dto.incident.UpdateIncidentDTO;
+import com.sentinel.sentinel.dto.incident.*;
+import com.sentinel.sentinel.enums.IncidentLogLevel;
 import com.sentinel.sentinel.enums.IncidentStatus;
 import com.sentinel.sentinel.enums.Roles;
 import com.sentinel.sentinel.enums.Severity;
@@ -25,6 +24,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -201,9 +201,50 @@ class IncidentControllerTest {
                 .andExpect(jsonPath("$.description").value("description"))
                 .andExpect(jsonPath("$.severity").value("LOW"))
                 .andExpect(jsonPath("$.serviceName").value("serviceName"))
-                .andExpect(jsonPath("$.incidentStatus").value("OPEN"));;
+                .andExpect(jsonPath("$.incidentStatus").value("OPEN"));
+    }
 
+    @Test
+    @DisplayName("create by system integration should create an incident by external system")
+    @WithMockUser
+    void createBySystemIntegrationShouldCreateIncident() throws Exception {
+        CreateIncidentDTO incident = new CreateIncidentDTO("title", "description", Severity.HIGH,
+                "service name");
 
+        CreateAutomaticIncidentDTO data = new CreateAutomaticIncidentDTO(incident, "message",
+                IncidentLogLevel.ERROR, "stacktrace");
 
+        CreatedIncidentBySystemIntegrationDTO createdIncident = new CreatedIncidentBySystemIntegrationDTO(1L, "title",
+                "description", Severity.HIGH.name(), IncidentStatus.OPEN.name(), "service name", Instant.now()
+                .plus(Duration.ofHours(24)).toString(), 1L);
+
+        when(incidentService.createIncidentBySystemIntegration(eq(data), any())).thenReturn(createdIncident);
+
+        mockMvc.perform(post("/v1/incidents/system_integration")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data)))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/v1/incidents/system_integration/1"))
+                .andExpect(jsonPath("$.id").value(1L));
+
+    }
+
+    @Test
+    @DisplayName("generate pdf should return a pdf file")
+    @WithMockUser
+    void generatePdfShouldReturnPdfFile() throws Exception {
+        byte[] pdf = "PDF fake".getBytes();
+        when(incidentService.generateIncidentsPdf(anyInt(), anyInt(), any(), any(), any(), any(), any(), any(), any(),
+               any())).thenReturn(pdf);
+
+        mockMvc.perform(get("/v1/incidents/pdf")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=incidents.pdf"))
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+                .andExpect(content().bytes(pdf));
     }
 }
