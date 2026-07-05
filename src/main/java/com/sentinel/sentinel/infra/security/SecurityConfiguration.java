@@ -55,6 +55,7 @@ public class SecurityConfiguration {
                     request.requestMatchers(HttpMethod.POST, version + "/auth/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/auth/login").permitAll();
                     request.requestMatchers(HttpMethod.POST, version + "/auth/token").permitAll();
+                    request.requestMatchers(HttpMethod.POST, version + "/auth/forgot_password/reset_code").permitAll();
                     request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/v3/api-docs/**").permitAll();
                     request.anyRequest().authenticated();

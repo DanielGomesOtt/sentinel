@@ -3,22 +3,29 @@ spring.application.name=sentinel
 #API VERSION
 api.version=v1
 
-#DATABASE URL
-spring.datasource.url=jdbc:postgresql://localhost:5432/sentinel
+# DATABASE URL
+spring.datasource.url=${SPRING_DATASOURCE_URL:default_db_url}
 
-#DATABASE CREDENTIALS (example values for local development)
-spring.datasource.username=postgres
-spring.datasource.password=password
+# DATABASE CREDENTIALS (example values for local development)
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:default_db_username}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:default_db_password}
 
-#JDBC DRIVER
+#SPRING MAIL
+spring.mail.host=${SPRING_MAIL_SENDER_HOST:default_host}
+spring.mail.port=${SPRING_MAIL_SENDER_PORT:default_port}
+spring.mail.username=${SPRING_MAIL_SENDER_USERNAME:default_mail_username}
+spring.mail.password=${SPRING_MAIL_SENDER_PASSWORD:default_mail_password}
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# JDBC DRIVER
 spring.datasource.driver-class-name=org.postgresql.Driver
-
 spring.jpa.show-sql=true
 
-#JWT SECRET (example values for local development)
+#JWT SECRET
 api.security.token.secret=secret
 
-#JWT DURATION (example values for local development)
+#JWT DURATION
 api.security.token.duration=24
 
 #LOG CONFIGURATION

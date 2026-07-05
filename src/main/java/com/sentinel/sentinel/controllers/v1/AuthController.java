@@ -2,6 +2,7 @@ package com.sentinel.sentinel.controllers.v1;
 
 import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
 import com.sentinel.sentinel.dto.auth.AuthenticationDTO;
+import com.sentinel.sentinel.dto.auth.ForgotPasswordEmail;
 import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
 import com.sentinel.sentinel.dto.system_integration.ClientAuthDTO;
 import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 
 @RestController
@@ -79,5 +81,20 @@ public class AuthController {
     )
     public ResponseEntity<AuthenticatedUserDTO> register(@RequestBody @Valid RegisterUserDTO data) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(data));
+    }
+
+    @PostMapping("/forgot_password/reset_code")
+    @Operation(
+            summary = "Generate a password reset code",
+            description = "Generates a password reset verification code and sends it to the user's email address."
+    )
+    public ResponseEntity<Map<String, String>> generatePasswordResetCode(
+            @RequestBody @Valid ForgotPasswordEmail data) {
+
+        authService.confirmUserByEmail(data);
+
+        return ResponseEntity.ok(
+                Map.of("message", "If the email is registered, a verification code has been sent.")
+        );
     }
 }

@@ -1,18 +1,18 @@
 package com.sentinel.sentinel.services;
 
+import com.sentinel.sentinel.dto.auth.ForgotPasswordEmail;
 import com.sentinel.sentinel.dto.system_integration.ClientAuthDTO;
 import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
 import com.sentinel.sentinel.exceptions.UserAlreadyExistException;
 import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
 import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
 import com.sentinel.sentinel.enums.Roles;
-import com.sentinel.sentinel.models.AuthenticatedPrincipal;
-import com.sentinel.sentinel.models.Organization;
-import com.sentinel.sentinel.models.SystemIntegration;
-import com.sentinel.sentinel.models.Users;
+import com.sentinel.sentinel.models.*;
+import com.sentinel.sentinel.repositories.ForgotPasswordTokenRepository;
 import com.sentinel.sentinel.repositories.OrganizationRepository;
 import com.sentinel.sentinel.repositories.SystemIntegrationRepository;
 import com.sentinel.sentinel.repositories.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,13 +40,20 @@ public class AuthService implements UserDetailsService {
 
     private final SystemIntegrationRepository systemIntegrationRepository;
 
+    private final ForgotPasswordTokenRepository forgotPasswordTokenRepository;
 
-    public AuthService(SystemIntegrationRepository systemIntegrationRepository, TokenService tokenService, PasswordEncoder passwordEncoder, OrganizationRepository organizationRepository, UsersRepository usersRepository) {
+    private final EmailService emailService;
+
+    public AuthService(SystemIntegrationRepository systemIntegrationRepository, TokenService tokenService,
+                       PasswordEncoder passwordEncoder, OrganizationRepository organizationRepository,
+                       UsersRepository usersRepository, ForgotPasswordTokenRepository forgotPasswordTokenRepository, ForgotPasswordTokenRepository forgotPasswordTokenRepository1, EmailService emailService) {
         this.systemIntegrationRepository = systemIntegrationRepository;
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
         this.organizationRepository = organizationRepository;
         this.usersRepository = usersRepository;
+        this.forgotPasswordTokenRepository = forgotPasswordTokenRepository1;
+        this.emailService = emailService;
     }
 
 
@@ -99,5 +109,30 @@ public class AuthService implements UserDetailsService {
 
         String token = tokenService.signSystemToken(client);
         return new TokenResponseDTO(token);
+    }
+
+    @Transactional
+    public void confirmUserByEmail(ForgotPasswordEmail data) {
+        Optional<Users> user = usersRepository.findByEmailAndStatus(data.email(), 1);
+
+        if(user.isPresent()) {
+            String randomToken = createForgotPasswordToken();
+            String hashedRandomToken = passwordEncoder.encode(randomToken);
+
+            String message = "This is your reset code: " + randomToken + "\n";
+            message += "This code is valid for 15 minutes.";
+
+            emailService.sendEmail(user.get().getEmail(), "Password Reset code", message);
+
+            ForgotPasswordToken forgotPasswordToken = new ForgotPasswordToken(user.get(), hashedRandomToken,
+                    Instant.now().plus(Duration.ofMinutes(15)), false, Instant.now());
+            forgotPasswordTokenRepository.save(forgotPasswordToken);
+        }
+
+    }
+
+    private String createForgotPasswordToken() {
+        SecureRandom random = new SecureRandom();
+        return String.format("%06d", random.nextInt(1_000_000));
     }
 }
