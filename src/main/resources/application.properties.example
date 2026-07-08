@@ -17,6 +17,7 @@ spring.mail.username=${SPRING_MAIL_SENDER_USERNAME:default_mail_username}
 spring.mail.password=${SPRING_MAIL_SENDER_PASSWORD:default_mail_password}
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
+smtp.mail=${SMTP_MAIL:default_email}
 
 # JDBC DRIVER
 spring.datasource.driver-class-name=org.postgresql.Driver
