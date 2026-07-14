@@ -1,8 +1,10 @@
 package com.sentinel.sentinel.services;
 
 import com.sentinel.sentinel.dto.auth.ForgotPasswordEmail;
+import com.sentinel.sentinel.dto.auth.ResetUserPasswordDTO;
 import com.sentinel.sentinel.dto.system_integration.ClientAuthDTO;
 import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
+import com.sentinel.sentinel.exceptions.ResetCodeException;
 import com.sentinel.sentinel.exceptions.UserAlreadyExistException;
 import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
 import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
@@ -129,6 +131,36 @@ public class AuthService implements UserDetailsService {
             forgotPasswordTokenRepository.save(forgotPasswordToken);
         }
 
+    }
+
+    @Transactional
+    public void resetUserPassword(ResetUserPasswordDTO data) {
+        Optional<Users> user = usersRepository.findByEmailAndStatus(data.email(), 1);
+
+        if (user.isPresent()) {
+            Optional<ForgotPasswordToken> forgotPasswordToken = forgotPasswordTokenRepository
+                    .findByUserAndUsed(user.get(), false);
+
+            if (forgotPasswordToken.isPresent()) {
+                if (passwordEncoder.matches(data.code(), forgotPasswordToken.get().getCode())
+                        && !forgotPasswordToken.get().getExpiresAt().isBefore(Instant.now())) {
+
+                    forgotPasswordToken.get().setUsed(true);
+                    forgotPasswordTokenRepository.save(forgotPasswordToken.get());
+
+                    String newPasswordHashed = passwordEncoder.encode(data.newPassword());
+                    user.get().setPasswordHash(newPasswordHashed);
+                    usersRepository.save(user.get());
+                }
+
+                throw new ResetCodeException("The provided password reset code is invalid or has expired.");
+
+            }
+
+            throw new ResetCodeException("The provided password reset code is invalid or has expired.");
+        }
+
+        throw new ResetCodeException("The provided password reset code is invalid or has expired.");
     }
 
     private String createForgotPasswordToken() {

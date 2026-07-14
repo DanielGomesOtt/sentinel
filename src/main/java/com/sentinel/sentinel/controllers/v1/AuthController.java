@@ -1,9 +1,6 @@
 package com.sentinel.sentinel.controllers.v1;
 
-import com.sentinel.sentinel.dto.auth.AuthenticatedUserDTO;
-import com.sentinel.sentinel.dto.auth.AuthenticationDTO;
-import com.sentinel.sentinel.dto.auth.ForgotPasswordEmail;
-import com.sentinel.sentinel.dto.auth.RegisterUserDTO;
+import com.sentinel.sentinel.dto.auth.*;
 import com.sentinel.sentinel.dto.system_integration.ClientAuthDTO;
 import com.sentinel.sentinel.dto.system_integration.TokenResponseDTO;
 import com.sentinel.sentinel.exceptions.UserNotFoundException;
@@ -96,5 +93,17 @@ public class AuthController {
         return ResponseEntity.ok(
                 Map.of("message", "If the email is registered, a verification code has been sent.")
         );
+    }
+
+    @PostMapping("/forgot_password/reset_password")
+    @Operation(
+            summary = "Reset a user's password",
+            description = "Verifies the provided password reset code and, if valid, resets the user's password."
+    )
+    public ResponseEntity<Map<String, String>> resetUserPassword(@RequestBody @Valid ResetUserPasswordDTO data) {
+
+        authService.resetUserPassword(data);
+
+        return ResponseEntity.ok(Map.of("message", "The password has been successfully reset."));
     }
 }

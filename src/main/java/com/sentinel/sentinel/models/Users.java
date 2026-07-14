@@ -58,6 +58,8 @@ public class Users {
 
     public String getPasswordHash() { return passwordHash; }
 
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+
     public Long getId() {
         return id;
     }

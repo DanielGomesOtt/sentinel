@@ -50,4 +50,10 @@ public class RestErrorHandler {
         RestErrorMessage error = new RestErrorMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+
+    @ExceptionHandler(ResetCodeException.class)
+    public ResponseEntity<RestErrorMessage> handleResetCodeException(ResetCodeException ex) {
+        RestErrorMessage error = new RestErrorMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
