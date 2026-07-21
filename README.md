@@ -1,6 +1,6 @@
 # Sentinel
 
-![Java](https://img.shields.io/badge/Java-21-orange)
+![Java](https://img.shields.io/badge/Java-25-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
@@ -95,7 +95,7 @@ Organization
 
 ## Visão Geral
 
-- Base: Java 21
+- Base: Java 25
 - Build: Maven com `mvnw` / `mvnw.cmd`
 - Banco de dados: PostgreSQL
 - Migrações: Flyway
@@ -131,6 +131,8 @@ Pontos principais do pacote `src/main/java/com/sentinel/sentinel`:
 
 ✅ Integração entre sistemas
 
+✅ Recuperação de senha via código de redefinição
+
 ✅ Geração de PDF
 
 ✅ Verificação automática de SLA
@@ -148,7 +150,7 @@ Pontos principais do pacote `src/main/java/com/sentinel/sentinel`:
 
 ## Tecnologias
 
-- Java 21
+- Java 25
 - Spring Boot
 - Spring Security
 - Spring Data JPA
@@ -247,6 +249,8 @@ Execute os testes com:
 - `POST /v1/auth/register` - criar usuário root inicial
 - `POST /v1/auth/login` - autenticar usuário e receber JWT
 - `POST /v1/auth/token` - gerar token para integração de sistema
+- `POST /v1/auth/forgot_password/reset_code` - solicitar código de redefinição de senha
+- `POST /v1/auth/forgot_password/reset_password` - redefinir senha usando o código enviado
 
 ### Usuários
 
