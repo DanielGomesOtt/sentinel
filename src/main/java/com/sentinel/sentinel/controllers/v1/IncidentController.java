@@ -30,8 +30,8 @@ public class IncidentController {
 
     @PostMapping
     @Operation(
-            summary = "Create an incident manually.",
-            description = "Creates a new incident manually."
+            summary = "Create an incident manually",
+            description = "Creates a new incident using the provided incident details. The authenticated user context is used to associate the incident with the correct organization."
     )
     public ResponseEntity<CreatedIncidentDTO> createManually(@RequestBody @Valid CreateIncidentDTO data,
                                                              @AuthenticationPrincipal AuthenticatedPrincipal principal) {
@@ -46,8 +46,8 @@ public class IncidentController {
 
     @PostMapping("/system_integration")
     @Operation(
-            summary = "Create an incident by system integration.",
-            description = "Creates a new incident by system integration."
+            summary = "Create an incident via system integration",
+            description = "Accepts incident data from an external integration and creates a new incident record. Requires a system integration role and authenticates the caller before creating the incident."
     )
     @PreAuthorize("hasRole('SYSTEM')")
     public ResponseEntity<CreatedIncidentBySystemIntegrationDTO> createIncidentBySystemIntegration(@RequestBody @Valid CreateAutomaticIncidentDTO data,
@@ -63,10 +63,8 @@ public class IncidentController {
 
     @GetMapping("/{id}")
     @Operation(
-            summary = "Find an incident by id.",
-            description = "Retrieves a specific incident by its unique identifier. "
-                    + "The user must be authenticated and can only access incidents "
-                    + "belonging to their organization."
+            summary = "Find an incident by ID",
+            description = "Retrieves a single incident using its unique identifier. The authenticated user must belong to the same organization as the incident owner, otherwise access is denied."
     )
     public ResponseEntity<CreatedIncidentDTO> findIncidentById(@PathVariable Long id,
                                                                @AuthenticationPrincipal AuthenticatedPrincipal principal) {
@@ -75,10 +73,8 @@ public class IncidentController {
 
     @GetMapping
     @Operation(
-            summary = "Find incidents by params.",
-            description = "Retrieves incidents by params. "
-                    + "The user must be authenticated and can only access incidents "
-                    + "belonging to their organization."
+            summary = "Search incidents with filters",
+            description = "Returns paginated incidents for the authenticated user's organization. Optional filters such as title, description, severity, status, service name, SLA deadline, and SLA violation can be applied to narrow results."
     )
     public ResponseEntity<PaginatedIncidentsDTO> findAll(@RequestParam(required = true) int page,
                                                          @RequestParam(required = true) int size,
@@ -95,9 +91,9 @@ public class IncidentController {
     }
 
     @PutMapping
-    @Operation(summary = "Update an incident",
-            description = "Updates an existing incident by its ID. Allows modification of fields such as title, " +
-                    "description, severity, status, and related service information."
+    @Operation(
+            summary = "Update an existing incident",
+            description = "Updates the fields of an existing incident, such as title, description, severity, status, and service information. This operation requires the authenticated user to have the TECH role."
     )
     @PreAuthorize("hasRole('TECH')")
     public ResponseEntity<UpdateIncidentDTO> updateManually(@RequestBody @Valid UpdateIncidentDTO data,
@@ -106,6 +102,11 @@ public class IncidentController {
     }
 
     @GetMapping("/pdf")
+    @Operation(
+            summary = "Generate incidents report in PDF",
+            description = "Generates a PDF report containing the incidents that match the provided filter criteria. " +
+                    "The report supports page/size pagination and optional filters, and returns the result as a downloadable PDF file."
+    )
     public ResponseEntity<byte[]> generatePdf(@RequestParam(required = true) int page,
                                               @RequestParam(required = true) int size,
                                               @RequestParam(required = false) String title,

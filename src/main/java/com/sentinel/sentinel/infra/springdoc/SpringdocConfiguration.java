@@ -30,7 +30,11 @@ public class SpringdocConfiguration {
         return new OpenAPI()
                 .info(new Info()
                         .title("Sentinel")
-                        .description("Documentation of Sentinel API")
+                        .description("Sentinel is a backend portfolio project built with Java 25 and Spring Boot. " +
+                                "It showcases a production-like backend architecture with JWT authentication, role-based access control, incident lifecycle management, system integration, audit logging, history tracking, PDF reporting, and SLA monitoring. " +
+                                "The API highlights backend design with Spring Security, Spring Data JPA and PostgreSQL, Flyway migrations, validation, exception handling, and OpenAPI documentation. " +
+                                "Use the documented endpoints to explore authentication flows, user and integration management, incident workflows, search filters, paginated results, and operational reporting in a portfolio-grade backend sample.\n\n" +
+                                "GitHub repository: [https://github.com/DanielGomesOtt/sentinel](https://github.com/DanielGomesOtt/sentinel)")
                         .version("1.0"));
     }
 }

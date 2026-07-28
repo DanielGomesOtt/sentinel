@@ -1,0 +1,158 @@
+.swagger-ui .topbar {
+    background: linear-gradient(90deg, #0f1f47 0%, #16336d 100%);
+    border-bottom: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.swagger-ui .topbar .topbar-wrapper .link span {
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.swagger-ui .topbar .download-url-section {
+    display: none;
+}
+
+.swagger-ui .topbar .topbar-wrapper .topbar-wrapper__logo {
+    margin-right: 0.5rem;
+}
+
+.swagger-ui .topbar .topbar-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.swagger-ui .info .title {
+    color: #10234f;
+    font-size: 2.4rem;
+    font-weight: 800;
+}
+
+.swagger-ui .info .description {
+    color: #4f5d7a;
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 840px;
+}
+
+.swagger-ui .info .base-url {
+    color: #0f1f47;
+}
+
+.swagger-ui .info .package .name,
+.swagger-ui .info .contact .link {
+    color: #1f3f7f;
+}
+
+.swagger-ui section.models.is-open,
+.swagger-ui .opblock-tag-section,
+.swagger-ui .opblock {
+    background: #f6f8ff;
+    border: 1px solid rgba(16, 35, 79, 0.08);
+    box-shadow: 0 3px 12px rgba(16, 35, 79, 0.08);
+    border-radius: 16px;
+}
+
+.swagger-ui .opblock-tag.no-desc span {
+    background: #e7eefb;
+    color: #0f1f47;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-weight: 700;
+}
+
+.swagger-ui .opblock-opens .opblock-summary {
+    background: #ffffff;
+}
+
+.swagger-ui .opblock-summary-method {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.swagger-ui .opblock-summary-method.get {
+    background: #3b82f6;
+}
+
+.swagger-ui .opblock-summary-method.post {
+    background: #0ea5e9;
+}
+
+.swagger-ui .opblock-summary-method.put,
+.swagger-ui .opblock-summary-method.patch {
+    background: #f59e0b;
+}
+
+.swagger-ui .opblock-summary-method.delete {
+    background: #ef4444;
+}
+
+.swagger-ui .opblock-summary-path {
+    color: #10234f;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.swagger-ui .opblock-summary-description {
+    color: #4f5d7a;
+}
+
+.swagger-ui .btn.try-out, .swagger-ui .btn.execute {
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.swagger-ui .btn.execute {
+    background: #0f1f47;
+    color: #ffffff;
+}
+
+.swagger-ui .btn.try-out {
+    background: #ffffff;
+    border: 1px solid rgba(15, 31, 71, 0.12);
+    color: #0f1f47;
+}
+
+.swagger-ui .responses-wrapper {
+    background: rgba(15, 31, 71, 0.03);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.swagger-ui .parameter__name,
+.swagger-ui .parameter__type,
+.swagger-ui .parameter__in {
+    color: #10234f;
+}
+
+.swagger-ui textarea[readonly] {
+    background: #f8fafc;
+    border-color: rgba(15, 31, 71, 0.12);
+}
+
+.swagger-ui .model-box {
+    background: #ffffff;
+    border-color: rgba(15, 31, 71, 0.08);
+}
+
+.swagger-ui .info .title:before {
+    content: "Portfolio Backend Project";
+    display: block;
+    font-size: 0.9rem;
+    color: #0f1f47;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.swagger-ui .try-out__btn, .swagger-ui .cancel, .swagger-ui .btn.clear {
+    border-radius: 999px;
+}
+
+.swagger-ui .schemes, .swagger-ui .servers, .swagger-ui .auth-wrapper {
+    border-radius: 16px;
+    border: 1px solid rgba(16, 35, 79, 0.08);
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 35, 79, 0.05);
+}

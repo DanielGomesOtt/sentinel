@@ -5,6 +5,7 @@ import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.services.IncidentHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/incidentHistory")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Incident History", description = "Endpoints to consult incident history records and generate history reports for incidents.")
 public class IncidentHistoryController {
 
     private final IncidentHistoryService incidentHistoryService;
@@ -27,9 +29,8 @@ public class IncidentHistoryController {
 
     @GetMapping
     @Operation(
-            summary = "Find incident histories by parameters.",
-            description = "Retrieves incident histories based on the provided parameters. "
-                    + "The user must be authenticated and belong to the organization."
+            summary = "Search incident history entries",
+            description = "Retrieves paginated incident history entries filtered by incident ID and optional parameters such as status change, action, time range, and user. The authenticated user must belong to the same organization."
     )
     public ResponseEntity<PaginatedIncidentHistoriesDTO> findHistoriesByParams(@RequestParam(required = true) int page,
                                                                                @RequestParam(required = true) int size,
@@ -46,6 +47,10 @@ public class IncidentHistoryController {
     }
 
     @GetMapping("/pdf")
+    @Operation(
+            summary = "Generate incident history report in PDF",
+            description = "Creates a PDF report of incident history entries that match the specified filters. The generated file is returned as a downloadable PDF to the caller."
+    )
     public ResponseEntity<byte[]> generatePdf(@RequestParam(required = true) int page,
                                               @RequestParam(required = true) int size,
                                               @RequestParam(required = true) Long incidentId,

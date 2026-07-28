@@ -6,6 +6,7 @@ import com.sentinel.sentinel.models.AuthenticatedPrincipal;
 import com.sentinel.sentinel.services.IncidentLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.time.Instant;
 @RestController
 @RequestMapping("/v1/incidentLog")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Incident Logs", description = "Endpoints to search incident logs and generate log reports for auditing and troubleshooting.")
 public class IncidentLogController {
 
     private final IncidentLogService incidentLogService;
@@ -27,9 +29,8 @@ public class IncidentLogController {
 
     @GetMapping
     @Operation(
-            summary = "Find incident logs by parameters.",
-            description = "Retrieves incident logs based on the provided parameters. "
-                    + "The user must be authenticated and belong to the organization."
+            summary = "Search incident logs with filters",
+            description = "Retrieves paginated incident log entries filtered by incident ID, log level, message, service name, time range, and user. The authenticated user must belong to the same organization."
     )
     public ResponseEntity<PaginatedIncidentLogsDTO> findLogsByParams(
             @RequestParam int page,
@@ -60,6 +61,10 @@ public class IncidentLogController {
     }
 
     @GetMapping("/pdf")
+    @Operation(
+            summary = "Generate incident log report in PDF",
+            description = "Creates a PDF report with incident log entries filtered by the specified parameters and returns the generated file as a downloadable PDF."
+    )
     public ResponseEntity<byte[]> generatePdf(@RequestParam int page,
                                               @RequestParam int size,
                                               @RequestParam(required = false) Long incidentId,

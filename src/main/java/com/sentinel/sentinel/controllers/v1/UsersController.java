@@ -32,8 +32,8 @@ public class UsersController {
 
     @PostMapping
     @Operation(
-            summary = "Register a new user",
-            description = "Creates a new user. The user can have the role of admin, technician, or standard user."
+            summary = "Create a new user",
+            description = "Creates a new application user and assigns a role such as ADMIN, TECH, or standard user. This endpoint is restricted to users with the ADMIN role."
     )
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreatedUserDTO> create(@RequestBody @Valid CreateUserDTO data) {

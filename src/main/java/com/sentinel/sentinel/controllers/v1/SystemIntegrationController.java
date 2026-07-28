@@ -33,8 +33,8 @@ public class SystemIntegrationController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
-            summary = "Create a system integration",
-            description = "Creates a new system integration and generates the required credentials for external system communication."
+            summary = "Create a new system integration",
+            description = "Registers a new system integration profile and generates credentials that external systems can use to authenticate with Sentinel. Requires an ADMIN role."
     )
     public ResponseEntity<CreatedSystemIntegrationDTO> create (@RequestBody @Valid CreateSystemIntegrationDTO data,
                                                                @AuthenticationPrincipal AuthenticatedPrincipal principal) {
