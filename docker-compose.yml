@@ -13,25 +13,6 @@ services:
     networks:
       - back-tier
 
-  api:
-    build: .
-    restart: always
-    ports:
-      - '8080:8080'
-    depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sentinel
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: password
-      SPRING_MAIL_SENDER_HOST:
-      SPRING_MAIL_SENDER_PORT:
-      SPRING_MAIL_SENDER_USERNAME:
-      SPRING_MAIL_SENDER_PASSWORD:
-      SMTP_MAIL:
-    networks:
-      - back-tier
-
 volumes:
   db-data:
 
