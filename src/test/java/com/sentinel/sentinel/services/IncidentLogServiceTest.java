@@ -1,7 +1,5 @@
 package com.sentinel.sentinel.services;
 
-import com.sentinel.sentinel.dto.incident_log.CreatedIncidentLogDTO;
-import com.sentinel.sentinel.dto.incident_log.IncidentLogPdfDTO;
 import com.sentinel.sentinel.dto.incident_log.PaginatedIncidentLogsDTO;
 import com.sentinel.sentinel.enums.IncidentLogLevel;
 import com.sentinel.sentinel.models.AuthenticatedPrincipal;
@@ -29,78 +27,76 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class IncidentLogServiceTest {
 
-    @Mock
-    private IncidentLogRepository incidentLogRepository;
+        @Mock
+        private IncidentLogRepository incidentLogRepository;
 
-    @InjectMocks
-    private IncidentLogService incidentLogService;
+        @InjectMocks
+        private IncidentLogService incidentLogService;
 
-    private AuthenticatedPrincipal principal;
+        private AuthenticatedPrincipal principal;
 
-    @BeforeEach
-    void setup() {
-        Users user = new Users();
-        user.setId(1L);
-        user.setOrganization(new Organization(1L, "organization", 1));
-        user.setRole(com.sentinel.sentinel.enums.Roles.ADMIN);
+        @BeforeEach
+        void setup() {
+                Users user = new Users();
+                user.setId(1L);
+                user.setOrganization(new Organization(1L, "organization", 1));
+                user.setRole(com.sentinel.sentinel.enums.Roles.ADMIN);
 
-        principal = new AuthenticatedPrincipal("1", "user@test.com", null,
-                "user", List.of(), 1L, user, null);
-    }
+                principal = new AuthenticatedPrincipal("1", "user@test.com", null,
+                                "user", List.of(), 1L, user, null);
+        }
 
-    @Test
-    @DisplayName("findLogsByParams should return paginated incident logs")
-    void findLogsByParamsShouldReturnPaginatedIncidentLogs() {
-        IncidentLog incidentLog = new IncidentLog(new Incident(), IncidentLogLevel.ERROR,
-                "message", "stacktrace", "service-name", Instant.now());
-        incidentLog.setId(1L);
-        incidentLog.getIncidentId().setId(100L);
+        @Test
+        @DisplayName("findLogsByParams should return paginated incident logs")
+        void findLogsByParamsShouldReturnPaginatedIncidentLogs() {
+                IncidentLog incidentLog = new IncidentLog(new Incident(), IncidentLogLevel.ERROR,
+                                "message", "stacktrace", "service-name", Instant.now());
+                incidentLog.setId(1L);
+                incidentLog.getIncidentId().setId(100L);
 
-        Page<IncidentLog> page = new PageImpl<>(List.of(incidentLog), PageRequest.of(0, 10), 1);
-        when(incidentLogRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+                Page<IncidentLog> page = new PageImpl<>(List.of(incidentLog), PageRequest.of(0, 10), 1);
+                when(incidentLogRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
-        PaginatedIncidentLogsDTO result = incidentLogService.findLogsByParams(0, 10, null,
-                IncidentLogLevel.ERROR, null, null, null, null, null, principal);
+                PaginatedIncidentLogsDTO result = incidentLogService.findLogsByParams(0, 10, null,
+                                IncidentLogLevel.ERROR, null, null, null, null, null, principal);
 
-        assertNotNull(result);
-        assertEquals(1, result.totalElements());
-        assertEquals(1, result.incidentLogs().size());
-        assertEquals(100L, result.incidentLogs().get(0).incidentId());
-    }
+                assertNotNull(result);
+                assertEquals(1, result.totalElements());
+                assertEquals(1, result.incidentLogs().size());
+                assertEquals(100L, result.incidentLogs().get(0).incidentId());
+        }
 
-    @Test
-    @DisplayName("generateIncidentLogPdf should return pdf bytes when logs exist")
-    void generateIncidentLogPdfShouldReturnPdfBytes() throws Exception {
-        IncidentLog incidentLog = new IncidentLog(new Incident(), IncidentLogLevel.INFO,
-                "message", "stacktrace", "service-name", Instant.now());
-        incidentLog.setId(1L);
-        incidentLog.getIncidentId().setId(200L);
+        @Test
+        @DisplayName("generateIncidentLogPdf should return pdf bytes when logs exist")
+        void generateIncidentLogPdfShouldReturnPdfBytes() throws Exception {
+                IncidentLog incidentLog = new IncidentLog(new Incident(), IncidentLogLevel.INFO,
+                                "message", "stacktrace", "service-name", Instant.now());
+                incidentLog.setId(1L);
+                incidentLog.getIncidentId().setId(200L);
 
-        Page<IncidentLog> page = new PageImpl<>(List.of(incidentLog), PageRequest.of(0, 10), 1);
-        when(incidentLogRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+                Page<IncidentLog> page = new PageImpl<>(List.of(incidentLog), PageRequest.of(0, 10), 1);
+                when(incidentLogRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
-        byte[] pdf = incidentLogService.generateIncidentLogPdf(0, 10, null,
-                IncidentLogLevel.INFO, null, null, null, null, null, principal);
+                byte[] pdf = incidentLogService.generateIncidentLogPdf(0, 10, null,
+                                IncidentLogLevel.INFO, null, null, null, null, null, principal);
 
-        assertNotNull(pdf);
-        assertTrue(pdf.length > 0);
-    }
+                assertNotNull(pdf);
+                assertTrue(pdf.length > 0);
+        }
 
-    @Test
-    @DisplayName("generateIncidentLogPdf should throw IncidentNotFoundException when no logs are found")
-    void generateIncidentLogPdfShouldThrowWhenNoLogsFound() {
-        Page<IncidentLog> page = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
-        when(incidentLogRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        @Test
+        @DisplayName("generateIncidentLogPdf should throw IncidentNotFoundException when no logs are found")
+        void generateIncidentLogPdfShouldThrowWhenNoLogsFound() {
+                Page<IncidentLog> page = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
+                when(incidentLogRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
-        assertThrows(IncidentNotFoundException.class, () ->
-                incidentLogService.generateIncidentLogPdf(0, 10, null,
-                        IncidentLogLevel.INFO, null, null, null, null, null, principal)
-        );
-    }
+                assertThrows(IncidentNotFoundException.class,
+                                () -> incidentLogService.generateIncidentLogPdf(0, 10, null,
+                                                IncidentLogLevel.INFO, null, null, null, null, null, principal));
+        }
 }
