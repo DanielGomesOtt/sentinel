@@ -68,7 +68,7 @@ public class IncidentController {
     )
     public ResponseEntity<CreatedIncidentDTO> findIncidentById(@PathVariable Long id,
                                                                @AuthenticationPrincipal AuthenticatedPrincipal principal) {
-        return ResponseEntity.ok().body(incidentService.getIncidentById(id, principal));
+        return ResponseEntity.ok(incidentService.getIncidentById(id, principal));
     }
 
     @GetMapping

@@ -16,6 +16,7 @@ public record CreatedIncidentDTO(
         this(createdIncident.getId(), createdIncident.getTitle(), createdIncident.getDescription(),
                 createdIncident.getSeverity().name(), createdIncident.getIncidentStatus().name(),
                 createdIncident.getServiceName(), createdIncident.getSlaDeadline().toString(),
-                createdIncident.getCreatedBy().getId());
+                createdIncident.getCreatedBy() != null ? createdIncident.getId() :
+                        createdIncident.getCreatedBySystemIntegration().getId());
     }
 }
