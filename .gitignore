@@ -1,9 +1,19 @@
 HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
+
+### Backend (Java / Spring Boot) ###
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/src/main/resources/application.properties
+backend/logs/
 !**/src/main/**/target/
 !**/src/test/**/target/
-src/main/resources/application.properties
+
+### Frontend (Node / Vite / React / Next.js) ###
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/.env.local
+frontend/coverage/
 
 ### STS ###
 .apt_generated
@@ -32,6 +42,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### LOGS ###
-logs/

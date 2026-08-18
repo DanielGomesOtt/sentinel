@@ -218,11 +218,12 @@ O serviço PostgreSQL expõe a porta `5432` e utiliza:
 - usuário: `postgres`
 - senha: `password`
 
-### 2. Build e execução
+### 2. Build e execução do Backend
 
 No Windows:
 
 ```powershell
+cd backend
 ./mvnw.cmd clean package
 ./mvnw.cmd spring-boot:run
 ```
@@ -230,16 +231,18 @@ No Windows:
 No Linux/macOS ou bash:
 
 ```bash
+cd backend
 ./mvnw clean package
 ./mvnw spring-boot:run
 ```
 
 ### 3. Testes
 
-Execute os testes com:
+Execute os testes no backend com:
 
 ```bash
-./mvnw test
+cd backend
+./mvnw clean test
 ```
 
 ## Endpoints Principais
