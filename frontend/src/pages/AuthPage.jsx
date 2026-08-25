@@ -64,10 +64,10 @@ export function AuthPage() {
     e.preventDefault();
     clearState();
 
-    const nameVal = validateText(name, 'Nome Completo', 2, 100);
+    const nameVal = validateText(name, 'Full Name', 2, 100);
     const emailVal = validateEmail(email);
     const passVal = validatePassword(password);
-    const orgVal = validateText(organizationName, 'Nome da Organização', 2, 100);
+    const orgVal = validateText(organizationName, 'Organization Name', 2, 100);
 
     const errors = {};
     if (!nameVal.isValid) errors.name = nameVal.message;
@@ -105,7 +105,7 @@ export function AuthPage() {
 
     try {
       const res = await requestResetCode(emailVal.sanitizedValue);
-      setSuccessMessage(res?.message || 'Código enviado se o e-mail estiver cadastrado.');
+      setSuccessMessage(res?.message || 'Verification code sent if email is registered.');
     } catch (err) {
       // error handled in context
     }
@@ -116,9 +116,9 @@ export function AuthPage() {
     e.preventDefault();
     clearState();
 
-    const codeVal = validateText(code, 'Código de verificação', 3, 50);
+    const codeVal = validateText(code, 'Verification Code', 3, 50);
     const emailVal = validateEmail(email);
-    const passVal = validatePassword(newPassword, 'Nova Senha');
+    const passVal = validatePassword(newPassword, 'New Password');
 
     const errors = {};
     if (!codeVal.isValid) errors.code = codeVal.message;
@@ -132,7 +132,7 @@ export function AuthPage() {
 
     try {
       const res = await resetPassword(codeVal.sanitizedValue, emailVal.sanitizedValue, newPassword);
-      setSuccessMessage(res?.message || 'Senha redefinida com sucesso! Faça login.');
+      setSuccessMessage(res?.message || 'Password successfully reset! Please log in.');
       setTimeout(() => handleModeChange('login'), 2500);
     } catch (err) {
       // error handled in context
@@ -155,7 +155,7 @@ export function AuthPage() {
         <button
           onClick={toggleTheme}
           className="p-2 rounded-full text-medium-muted hover:text-medium-text dark:text-medium-muted-dark dark:hover:text-medium-text-dark transition-colors"
-          title="Alternar Tema"
+          title="Toggle Theme"
         >
           {isDark ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
         </button>
@@ -165,16 +165,16 @@ export function AuthPage() {
       <div className="w-full max-w-md mx-auto my-auto py-8">
         <div className="text-center mb-8">
           <h1 className="font-serif text-3xl font-bold tracking-tight text-medium-text dark:text-medium-text-dark">
-            {mode === 'login' && 'Bem-vindo de volta'}
-            {mode === 'register' && 'Criar Organização Root'}
-            {mode === 'forgot' && 'Recuperar Senha'}
-            {mode === 'reset' && 'Redefinir Senha'}
+            {mode === 'login' && 'Welcome Back'}
+            {mode === 'register' && 'Create Root Organization'}
+            {mode === 'forgot' && 'Reset Password'}
+            {mode === 'reset' && 'Set New Password'}
           </h1>
           <p className="mt-2 text-sm text-medium-muted dark:text-medium-muted-dark">
-            {mode === 'login' && 'Acesse a plataforma de gerenciamento de incidentes.'}
-            {mode === 'register' && 'Configuração inicial da organização root do Sentinel.'}
-            {mode === 'forgot' && 'Solicite um código de verificação para o seu e-mail.'}
-            {mode === 'reset' && 'Insira o código recebido e sua nova senha.'}
+            {mode === 'login' && 'Sign in to access the incident management platform.'}
+            {mode === 'register' && 'Initial system setup for root organization.'}
+            {mode === 'forgot' && 'Request a verification code sent to your email.'}
+            {mode === 'reset' && 'Enter your verification code and new password.'}
           </p>
         </div>
 
@@ -197,10 +197,10 @@ export function AuthPage() {
         {mode === 'login' && (
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             <Input
-              label="E-mail"
+              label="Email"
               id="loginEmail"
               type="email"
-              placeholder="seu.email@empresa.com"
+              placeholder="user@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={fieldErrors.email}
@@ -208,7 +208,7 @@ export function AuthPage() {
             />
 
             <Input
-              label="Senha"
+              label="Password"
               id="loginPassword"
               type="password"
               placeholder="••••••••"
@@ -224,7 +224,7 @@ export function AuthPage() {
                 onClick={() => handleModeChange('forgot')}
                 className="text-medium-muted hover:text-medium-text dark:text-medium-muted-dark dark:hover:text-medium-text-dark transition-colors"
               >
-                Esqueceu a senha?
+                Forgot password?
               </button>
             </div>
 
@@ -233,7 +233,7 @@ export function AuthPage() {
               disabled={loading}
               className="w-full mt-2 py-2.5 px-4 rounded-full bg-medium-green hover:bg-medium-green-hover text-white font-medium text-sm transition-all duration-150 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
             >
-              {loading ? 'Entrando...' : 'Entrar na Conta'}
+              {loading ? 'Signing in...' : 'Sign In'}
               {!loading && <ArrowRight className="w-4 h-4" />}
             </button>
           </form>
@@ -243,9 +243,9 @@ export function AuthPage() {
         {mode === 'register' && (
           <form onSubmit={handleRegisterSubmit} className="space-y-4">
             <Input
-              label="Nome Completo"
+              label="Full Name"
               id="regName"
-              placeholder="Administrador Root"
+              placeholder="Root Administrator"
               value={name}
               onChange={(e) => setName(e.target.value)}
               error={fieldErrors.name}
@@ -254,10 +254,10 @@ export function AuthPage() {
             />
 
             <Input
-              label="E-mail Corporativo"
+              label="Corporate Email"
               id="regEmail"
               type="email"
-              placeholder="admin@empresa.com"
+              placeholder="admin@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={fieldErrors.email}
@@ -265,9 +265,9 @@ export function AuthPage() {
             />
 
             <Input
-              label="Nome da Organização"
+              label="Organization Name"
               id="regOrg"
-              placeholder="Minha Empresa S.A."
+              placeholder="Example Corp"
               value={organizationName}
               onChange={(e) => setOrganizationName(e.target.value)}
               error={fieldErrors.organizationName}
@@ -276,10 +276,10 @@ export function AuthPage() {
             />
 
             <Input
-              label="Senha de Acesso"
+              label="Password"
               id="regPassword"
               type="password"
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Minimum 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={fieldErrors.password}
@@ -291,7 +291,7 @@ export function AuthPage() {
               disabled={loading}
               className="w-full mt-2 py-2.5 px-4 rounded-full bg-medium-green hover:bg-medium-green-hover text-white font-medium text-sm transition-all duration-150 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
             >
-              {loading ? 'Cadastrando...' : 'Criar Organização Root'}
+              {loading ? 'Creating...' : 'Create Root Organization'}
               {!loading && <UserPlus className="w-4 h-4" />}
             </button>
           </form>
@@ -301,10 +301,10 @@ export function AuthPage() {
         {mode === 'forgot' && (
           <form onSubmit={handleForgotSubmit} className="space-y-4">
             <Input
-              label="E-mail Cadastrado"
+              label="Registered Email"
               id="forgotEmail"
               type="email"
-              placeholder="seu.email@empresa.com"
+              placeholder="user@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={fieldErrors.email}
@@ -316,7 +316,7 @@ export function AuthPage() {
               disabled={loading}
               className="w-full py-2.5 px-4 rounded-full bg-medium-green hover:bg-medium-green-hover text-white font-medium text-sm transition-all duration-150 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
             >
-              {loading ? 'Enviando...' : 'Solicitar Código de Redefinição'}
+              {loading ? 'Sending...' : 'Request Verification Code'}
             </button>
 
             <div className="text-center pt-2">
@@ -325,7 +325,7 @@ export function AuthPage() {
                 onClick={() => handleModeChange('reset')}
                 className="text-xs text-medium-green hover:underline font-medium"
               >
-                Já possui um código? Redefinir senha aqui.
+                Already have a code? Reset password here.
               </button>
             </div>
           </form>
@@ -335,10 +335,10 @@ export function AuthPage() {
         {mode === 'reset' && (
           <form onSubmit={handleResetSubmit} className="space-y-4">
             <Input
-              label="E-mail"
+              label="Email"
               id="resetEmail"
               type="email"
-              placeholder="seu.email@empresa.com"
+              placeholder="user@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={fieldErrors.email}
@@ -346,9 +346,9 @@ export function AuthPage() {
             />
 
             <Input
-              label="Código de Verificação"
+              label="Verification Code"
               id="resetCode"
-              placeholder="Código recebido por e-mail"
+              placeholder="Code received by email"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               error={fieldErrors.code}
@@ -356,10 +356,10 @@ export function AuthPage() {
             />
 
             <Input
-              label="Nova Senha"
+              label="New Password"
               id="resetNewPassword"
               type="password"
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Minimum 6 characters"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               error={fieldErrors.newPassword}
@@ -371,7 +371,7 @@ export function AuthPage() {
               disabled={loading}
               className="w-full py-2.5 px-4 rounded-full bg-medium-green hover:bg-medium-green-hover text-white font-medium text-sm transition-all duration-150 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
             >
-              {loading ? 'Redefinindo...' : 'Atualizar Senha'}
+              {loading ? 'Resetting...' : 'Update Password'}
               {!loading && <KeyRound className="w-4 h-4" />}
             </button>
           </form>
@@ -384,7 +384,7 @@ export function AuthPage() {
               onClick={() => handleModeChange('login')}
               className="hover:text-medium-text dark:hover:text-medium-text-dark font-medium transition-colors"
             >
-              Voltar ao Login
+              Back to Login
             </button>
           )}
 
@@ -395,7 +395,7 @@ export function AuthPage() {
                 onClick={() => handleModeChange('register')}
                 className="hover:text-medium-text dark:hover:text-medium-text-dark font-medium transition-colors"
               >
-                Primeiro Acesso / Cadastrar Root
+                Initial Setup / Register Root
               </button>
             </>
           )}

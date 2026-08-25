@@ -31,27 +31,27 @@ export function sanitizeString(str) {
 
 // Validate email format
 export function validateEmail(email) {
-  if (!email || typeof email !== 'string') return { isValid: false, message: 'E-mail é obrigatório.' };
+  if (!email || typeof email !== 'string') return { isValid: false, message: 'Email is required.' };
   const sanitized = email.trim();
-  if (sanitized.length > 254) return { isValid: false, message: 'E-mail muito longo.' };
+  if (sanitized.length > 254) return { isValid: false, message: 'Email is too long.' };
   
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(sanitized)) {
-    return { isValid: false, message: 'Por favor, insira um e-mail válido (ex: usuario@empresa.com).' };
+    return { isValid: false, message: 'Please enter a valid email address (e.g. user@company.com).' };
   }
   return { isValid: true, sanitizedValue: sanitized };
 }
 
 // Validate password rules
-export function validatePassword(password, fieldName = 'Senha') {
+export function validatePassword(password, fieldName = 'Password') {
   if (!password || typeof password !== 'string') {
-    return { isValid: false, message: `${fieldName} é obrigatória.` };
+    return { isValid: false, message: `${fieldName} is required.` };
   }
   if (password.length < 6) {
-    return { isValid: false, message: `${fieldName} deve ter no mínimo 6 caracteres.` };
+    return { isValid: false, message: `${fieldName} must be at least 6 characters long.` };
   }
   if (password.length > 100) {
-    return { isValid: false, message: `${fieldName} não pode exceder 100 caracteres.` };
+    return { isValid: false, message: `${fieldName} cannot exceed 100 characters.` };
   }
   return { isValid: true, sanitizedValue: password };
 }
@@ -60,17 +60,17 @@ export function validatePassword(password, fieldName = 'Senha') {
 export function validateText(value, name, minLen = 1, maxLen = 255, required = true) {
   if (value === null || value === undefined || String(value).trim() === '') {
     if (required) {
-      return { isValid: false, message: `${name} é um campo obrigatório.` };
+      return { isValid: false, message: `${name} is a required field.` };
     }
     return { isValid: true, sanitizedValue: '' };
   }
 
   const sanitized = sanitizeString(value);
   if (sanitized.length < minLen) {
-    return { isValid: false, message: `${name} deve ter pelo menos ${minLen} caractere(s).` };
+    return { isValid: false, message: `${name} must be at least ${minLen} character(s).` };
   }
   if (sanitized.length > maxLen) {
-    return { isValid: false, message: `${name} não pode exceder ${maxLen} caracteres.` };
+    return { isValid: false, message: `${name} cannot exceed ${maxLen} characters.` };
   }
   return { isValid: true, sanitizedValue: sanitized };
 }
@@ -78,21 +78,21 @@ export function validateText(value, name, minLen = 1, maxLen = 255, required = t
 // Validate numeric ID parameter
 export function validateId(id, name = 'ID') {
   if (id === null || id === undefined || id === '') {
-    return { isValid: false, message: `${name} é obrigatório.` };
+    return { isValid: false, message: `${name} is required.` };
   }
   const num = Number(id);
   if (!Number.isInteger(num) || num <= 0) {
-    return { isValid: false, message: `${name} deve ser um número inteiro positivo válido.` };
+    return { isValid: false, message: `${name} must be a valid positive integer.` };
   }
   return { isValid: true, sanitizedValue: num };
 }
 
 // Validate enum value against allowed options
-export function validateEnum(value, allowedValues, name = 'Campo') {
+export function validateEnum(value, allowedValues, name = 'Field') {
   if (!value) return { isValid: true, sanitizedValue: '' };
   const sanitized = sanitizeString(value).toUpperCase();
   if (!allowedValues.includes(sanitized)) {
-    return { isValid: false, message: `${name} contém um valor inválido.` };
+    return { isValid: false, message: `${name} contains an invalid value.` };
   }
   return { isValid: true, sanitizedValue: sanitized };
 }

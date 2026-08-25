@@ -61,14 +61,14 @@ async function request(endpoint, options = {}) {
         if (onUnauthorizedCallback) {
           onUnauthorizedCallback();
         }
-        throw new Error('Sessão expirada ou não autorizada. Faça login novamente.');
+        throw new Error('Session expired or unauthorized. Please log in again.');
       }
 
       if (response.status === 403) {
-        throw new Error('Você não tem permissão para realizar esta ação.');
+        throw new Error('You do not have permission to perform this action.');
       }
 
-      let errorMessage = `Erro na requisição (Código: ${response.status})`;
+      let errorMessage = `Request error (Status Code: ${response.status})`;
       try {
         const errorData = await response.json();
         if (errorData.message) {
@@ -79,14 +79,12 @@ async function request(endpoint, options = {}) {
           errorMessage = errorData.errors.map(e => e.defaultMessage || e.message || e).join(', ');
         }
       } catch (e) {
-        // If JSON parsing fails, fallback to statusText
         if (response.statusText) errorMessage = response.statusText;
       }
 
       throw new Error(errorMessage);
     }
 
-    // Return empty object for 204 No Content
     if (response.status === 204) {
       return null;
     }
@@ -95,14 +93,14 @@ async function request(endpoint, options = {}) {
   } catch (err) {
     clearTimeout(timeoutId);
     if (err.name === 'AbortError') {
-      throw new Error('Tempo limite da requisição atingido (Timeout). Verifique sua conexão.');
+      throw new Error('Request timeout reached. Please check your connection.');
     }
     throw err;
   }
 }
 
 // Helper to download PDF binary data
-export async function downloadPdf(endpoint, queryParams = {}, filename = 'relatorio.pdf') {
+export async function downloadPdf(endpoint, queryParams = {}, filename = 'report.pdf') {
   const queryString = new URLSearchParams(queryParams).toString();
   const fullUrl = `${API_BASE_URL}${endpoint}${queryString ? `?${queryString}` : ''}`;
   
@@ -117,9 +115,9 @@ export async function downloadPdf(endpoint, queryParams = {}, filename = 'relato
   if (!response.ok) {
     if (response.status === 401) {
       if (onUnauthorizedCallback) onUnauthorizedCallback();
-      throw new Error('Sessão expirada. Faça login novamente.');
+      throw new Error('Session expired. Please log in again.');
     }
-    throw new Error(`Falha ao gerar PDF. Status: ${response.status}`);
+    throw new Error(`Failed to generate PDF. Status: ${response.status}`);
   }
 
   const blob = await response.blob();

@@ -22,18 +22,18 @@ import {
 } from 'lucide-react';
 
 const SEVERITIES = [
-  { value: 'CRITICAL', label: 'CRITICAL (Crítico)' },
-  { value: 'HIGH', label: 'HIGH (Alto)' },
-  { value: 'MEDIUM', label: 'MEDIUM (Médio)' },
-  { value: 'LOW', label: 'LOW (Baixo)' },
+  { value: 'CRITICAL', label: 'CRITICAL' },
+  { value: 'HIGH', label: 'HIGH' },
+  { value: 'MEDIUM', label: 'MEDIUM' },
+  { value: 'LOW', label: 'LOW' },
 ];
 
 const STATUSES = [
-  { value: 'OPEN', label: 'OPEN (Aberto)' },
-  { value: 'UNDER_REVIEW', label: 'UNDER_REVIEW (Em Análise)' },
-  { value: 'IN_CORRECTION', label: 'IN_CORRECTION (Em Correção)' },
-  { value: 'RESOLVED', label: 'RESOLVED (Resolvido)' },
-  { value: 'CLOSED', label: 'CLOSED (Fechado)' },
+  { value: 'OPEN', label: 'OPEN' },
+  { value: 'UNDER_REVIEW', label: 'UNDER_REVIEW' },
+  { value: 'IN_CORRECTION', label: 'IN_CORRECTION' },
+  { value: 'RESOLVED', label: 'RESOLVED' },
+  { value: 'CLOSED', label: 'CLOSED' },
 ];
 
 export function IncidentsPage({ onViewHistory, onViewLogs }) {
@@ -98,7 +98,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
         setTotalElements(data.totalElements || 0);
       }
     } catch (err) {
-      setError(err.message || 'Erro ao carregar lista de incidentes.');
+      setError(err.message || 'Error loading incident list.');
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
     try {
       const rawParams = {
         page: 0,
-        size: 100, // Export current view/filtered items
+        size: 100,
         title: filterTitle,
         description: filterDescription,
         severity: filterSeverity,
@@ -125,7 +125,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
       const cleanParams = sanitizeQueryParams(rawParams);
       await apiClient.downloadPdf('/v1/incidents/pdf', cleanParams, `sentinel_incidents_${Date.now()}.pdf`);
     } catch (err) {
-      alert(`Falha ao exportar PDF: ${err.message}`);
+      alert(`Failed to export PDF: ${err.message}`);
     } finally {
       setPdfDownloading(false);
     }
@@ -146,10 +146,10 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
     e.preventDefault();
     setFormErrors({});
 
-    const titleVal = validateText(formTitle, 'Título', 3, 200);
-    const descVal = validateText(formDescription, 'Descrição', 5, 2000);
-    const sevVal = validateEnum(formSeverity, ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'], 'Severidade');
-    const serviceVal = validateText(formService, 'Serviço', 2, 100);
+    const titleVal = validateText(formTitle, 'Title', 3, 200);
+    const descVal = validateText(formDescription, 'Description', 5, 2000);
+    const sevVal = validateEnum(formSeverity, ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'], 'Severity');
+    const serviceVal = validateText(formService, 'Service', 2, 100);
 
     const errors = {};
     if (!titleVal.isValid) errors.title = titleVal.message;
@@ -196,11 +196,11 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
 
     if (!selectedIncident?.id) return;
 
-    const titleVal = validateText(formTitle, 'Título', 3, 200);
-    const descVal = validateText(formDescription, 'Descrição', 5, 2000);
-    const sevVal = validateEnum(formSeverity, ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'], 'Severidade');
+    const titleVal = validateText(formTitle, 'Title', 3, 200);
+    const descVal = validateText(formDescription, 'Description', 5, 2000);
+    const sevVal = validateEnum(formSeverity, ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'], 'Severity');
     const statusVal = validateEnum(formStatus, ['OPEN', 'UNDER_REVIEW', 'IN_CORRECTION', 'RESOLVED', 'CLOSED'], 'Status');
-    const serviceVal = validateText(formService, 'Serviço', 2, 100);
+    const serviceVal = validateText(formService, 'Service', 2, 100);
 
     const errors = {};
     if (!titleVal.isValid) errors.title = titleVal.message;
@@ -242,7 +242,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
     if (!dateStr) return 'N/A';
     try {
       const d = new Date(dateStr);
-      return d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+      return d.toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' });
     } catch (e) {
       return dateStr;
     }
@@ -264,10 +264,10 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-medium-border dark:border-medium-border-dark pb-4">
         <div>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-medium-text dark:text-medium-text-dark">
-            Gestão de Incidentes
+            Incident Management
           </h1>
           <p className="text-xs sm:text-sm text-medium-muted dark:text-medium-muted-dark mt-1">
-            Monitore, crie e atualize o ciclo de vida dos incidentes operacionais.
+            Monitor, create, and update operational incident lifecycles.
           </p>
         </div>
 
@@ -278,7 +278,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
             className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-medium-border dark:border-medium-border-dark text-xs font-medium text-medium-text dark:text-medium-text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
           >
             <Download className="w-4 h-4 text-medium-muted" />
-            <span>{pdfDownloading ? 'Exportando...' : 'Exportar PDF'}</span>
+            <span>{pdfDownloading ? 'Exporting...' : 'Export PDF'}</span>
           </button>
 
           <button
@@ -286,7 +286,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-medium-green hover:bg-medium-green-hover text-white text-xs font-medium transition-all shadow-xs"
           >
             <Plus className="w-4 h-4" />
-            <span>Novo Incidente</span>
+            <span>New Incident</span>
           </button>
         </div>
       </div>
@@ -296,7 +296,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
         <div className="flex items-center justify-between text-xs font-semibold text-medium-text dark:text-medium-text-dark">
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-medium-muted" />
-            <span>Filtros Avançados</span>
+            <span>Advanced Filters</span>
           </div>
           <button
             onClick={() => {
@@ -310,14 +310,14 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
             }}
             className="text-medium-muted hover:text-medium-text dark:hover:text-medium-text-dark font-normal transition-colors"
           >
-            Limpar Filtros
+            Clear Filters
           </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           <Input
             id="fTitle"
-            placeholder="Buscar por título..."
+            placeholder="Search by title..."
             value={filterTitle}
             onChange={(e) => { setFilterTitle(e.target.value); setPage(0); }}
             icon={Search}
@@ -325,7 +325,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
 
           <Input
             id="fService"
-            placeholder="Nome do serviço..."
+            placeholder="Service name..."
             value={filterService}
             onChange={(e) => { setFilterService(e.target.value); setPage(0); }}
           />
@@ -335,7 +335,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
             value={filterSeverity}
             onChange={(e) => { setFilterSeverity(e.target.value); setPage(0); }}
             options={SEVERITIES}
-            placeholder="Todas Severidades"
+            placeholder="All Severities"
           />
 
           <Select
@@ -343,7 +343,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
             value={filterStatus}
             onChange={(e) => { setFilterStatus(e.target.value); setPage(0); }}
             options={STATUSES}
-            placeholder="Todos os Status"
+            placeholder="All Statuses"
           />
 
           <div className="flex items-center justify-start h-full pt-1">
@@ -356,7 +356,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
               />
               <span className="flex items-center gap-1 text-red-600 dark:text-red-400 font-semibold">
                 <AlertTriangle className="w-3.5 h-3.5" />
-                SLA Violado
+                SLA Violated
               </span>
             </label>
           </div>
@@ -368,7 +368,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
         <div className="p-4 rounded-md bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs flex items-center justify-between">
           <span>{error}</span>
           <button onClick={fetchIncidents} className="underline flex items-center gap-1">
-            <RefreshCw className="w-3 h-3" /> Tentar novamente
+            <RefreshCw className="w-3 h-3" /> Retry
           </button>
         </div>
       )}
@@ -378,13 +378,13 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
         {loading ? (
           <div className="py-16 text-center text-medium-muted dark:text-medium-muted-dark">
             <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-medium-green" />
-            <p className="text-xs">Carregando incidentes...</p>
+            <p className="text-xs">Loading incidents...</p>
           </div>
         ) : incidents.length === 0 ? (
           <div className="py-16 text-center text-medium-muted dark:text-medium-muted-dark">
             <FileText className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-sm font-medium">Nenhum incidente encontrado.</p>
-            <p className="text-xs mt-1">Tente ajustar os filtros ou criar um novo incidente.</p>
+            <p className="text-sm font-medium">No incidents found.</p>
+            <p className="text-xs mt-1">Try adjusting your filters or creating a new incident.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -392,11 +392,11 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
               <thead>
                 <tr className="border-b border-medium-border dark:border-medium-border-dark bg-gray-50 dark:bg-medium-surface-dark text-[11px] font-semibold tracking-wider text-medium-muted dark:text-medium-muted-dark uppercase">
                   <th className="py-3 px-4">ID</th>
-                  <th className="py-3 px-4">Título / Serviço</th>
-                  <th className="py-3 px-4">Severidade</th>
+                  <th className="py-3 px-4">Title / Service</th>
+                  <th className="py-3 px-4">Severity</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4">SLA Deadline</th>
-                  <th className="py-3 px-4 text-right">Ações</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-medium-border dark:divide-medium-border-dark text-xs">
@@ -439,7 +439,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
                         </div>
                         {violated && (
                           <span className="text-[10px] text-red-600 dark:text-red-400 font-semibold block">
-                            Violado!
+                            Violated!
                           </span>
                         )}
                       </td>
@@ -448,7 +448,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
                         <button
                           onClick={() => openDetailModal(inc)}
                           className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-medium-muted hover:text-medium-text dark:hover:text-medium-text-dark transition-colors"
-                          title="Ver Detalhes"
+                          title="View Details"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
@@ -457,7 +457,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
                           <button
                             onClick={() => openEditModal(inc)}
                             className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-medium-green hover:text-medium-green-hover transition-colors"
-                            title="Editar Incidente (Tech/Admin)"
+                            title="Edit Incident (Tech/Admin)"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
@@ -486,7 +486,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
       <Modal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
-        title="Criar Novo Incidente"
+        title="Create New Incident"
       >
         <form onSubmit={handleCreateSubmit} className="space-y-4">
           {formErrors.general && (
@@ -496,9 +496,9 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
           )}
 
           <Input
-            label="Título do Incidente"
+            label="Incident Title"
             id="cTitle"
-            placeholder="Ex: Queda na API de Pagamentos"
+            placeholder="e.g. Outage in payment API"
             value={formTitle}
             onChange={(e) => setFormTitle(e.target.value)}
             error={formErrors.title}
@@ -507,9 +507,9 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
           />
 
           <Input
-            label="Serviço Afetado"
+            label="Affected Service"
             id="cService"
-            placeholder="Ex: payment-gateway"
+            placeholder="e.g. payment-gateway"
             value={formService}
             onChange={(e) => setFormService(e.target.value)}
             error={formErrors.serviceName}
@@ -518,7 +518,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
           />
 
           <Select
-            label="Severidade"
+            label="Severity"
             id="cSeverity"
             value={formSeverity}
             onChange={(e) => setFormSeverity(e.target.value)}
@@ -528,10 +528,10 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
           />
 
           <Input
-            label="Descrição Detalhada"
+            label="Detailed Description"
             id="cDesc"
             type="textarea"
-            placeholder="Descreva a falha ou indisponibilidade identificada..."
+            placeholder="Describe the failure or outage identified..."
             value={formDescription}
             onChange={(e) => setFormDescription(e.target.value)}
             error={formErrors.description}
@@ -545,13 +545,13 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
               onClick={() => setIsCreateOpen(false)}
               className="px-4 py-2 rounded-full border border-medium-border dark:border-medium-border-dark text-xs font-medium text-medium-text dark:text-medium-text-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              Cancelar
+              Cancel
             </button>
             <button
               type="submit"
               className="px-5 py-2 rounded-full bg-medium-green hover:bg-medium-green-hover text-white text-xs font-medium transition-colors"
             >
-              Criar Incidente
+              Create Incident
             </button>
           </div>
         </form>
@@ -561,7 +561,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
       <Modal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
-        title={`Atualizar Incidente #${selectedIncident?.id}`}
+        title={`Update Incident #${selectedIncident?.id}`}
       >
         <form onSubmit={handleEditSubmit} className="space-y-4">
           {formErrors.general && (
@@ -571,7 +571,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
           )}
 
           <Input
-            label="Título do Incidente"
+            label="Incident Title"
             id="eTitle"
             value={formTitle}
             onChange={(e) => setFormTitle(e.target.value)}
@@ -581,7 +581,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
           />
 
           <Input
-            label="Serviço"
+            label="Service"
             id="eService"
             value={formService}
             onChange={(e) => setFormService(e.target.value)}
@@ -592,7 +592,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select
-              label="Severidade"
+              label="Severity"
               id="eSeverity"
               value={formSeverity}
               onChange={(e) => setFormSeverity(e.target.value)}
@@ -602,7 +602,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
             />
 
             <Select
-              label="Status do Incidente"
+              label="Incident Status"
               id="eStatus"
               value={formStatus}
               onChange={(e) => setFormStatus(e.target.value)}
@@ -613,7 +613,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
           </div>
 
           <Input
-            label="Descrição Atualizada"
+            label="Updated Description"
             id="eDesc"
             type="textarea"
             value={formDescription}
@@ -629,13 +629,13 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
               onClick={() => setIsEditOpen(false)}
               className="px-4 py-2 rounded-full border border-medium-border dark:border-medium-border-dark text-xs font-medium text-medium-text dark:text-medium-text-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              Cancelar
+              Cancel
             </button>
             <button
               type="submit"
               className="px-5 py-2 rounded-full bg-medium-green hover:bg-medium-green-hover text-white text-xs font-medium transition-colors"
             >
-              Salvar Alterações
+              Save Changes
             </button>
           </div>
         </form>
@@ -645,7 +645,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
       <Modal
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
-        title={`Detalhes do Incidente #${selectedIncident?.id}`}
+        title={`Incident Details #${selectedIncident?.id}`}
       >
         {selectedIncident && (
           <div className="space-y-4 text-xs">
@@ -668,7 +668,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
 
             <div className="grid grid-cols-2 gap-3 text-medium-muted dark:text-medium-muted-dark">
               <div>
-                <span className="font-medium text-medium-text dark:text-medium-text-dark">Criado Por (ID):</span> #{selectedIncident.createdBy || 'Sistema'}
+                <span className="font-medium text-medium-text dark:text-medium-text-dark">Created By (ID):</span> #{selectedIncident.createdBy || 'System'}
               </div>
               <div>
                 <span className="font-medium text-medium-text dark:text-medium-text-dark">SLA Deadline:</span> {formatDate(selectedIncident.slaDeadline)}
@@ -683,7 +683,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
                 }}
                 className="px-3 py-1.5 rounded border border-medium-border dark:border-medium-border-dark hover:bg-gray-100 dark:hover:bg-gray-800 text-medium-text dark:text-medium-text-dark transition-colors"
               >
-                Ver Histórico de Alterações
+                View Audit History
               </button>
 
               <button
@@ -693,7 +693,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
                 }}
                 className="px-3 py-1.5 rounded border border-medium-border dark:border-medium-border-dark hover:bg-gray-100 dark:hover:bg-gray-800 text-medium-text dark:text-medium-text-dark transition-colors"
               >
-                Ver Logs do Incidente
+                View Incident Logs
               </button>
             </div>
           </div>

@@ -6,9 +6,9 @@ import { validateEmail, validatePassword, validateText, validateId } from '../ut
 import { Users, UserPlus, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
 
 const ROLES = [
-  { value: 'ADMIN', label: 'ADMIN - Acesso total à administração' },
-  { value: 'TECH', label: 'TECH - Atualiza e resolve incidentes' },
-  { value: 'USER', label: 'USER - Visualizador e consulta' },
+  { value: 'ADMIN', label: 'ADMIN - Full administrative access' },
+  { value: 'TECH', label: 'TECH - Update and resolve incidents' },
+  { value: 'USER', label: 'USER - View and search only' },
 ];
 
 export function AdminUsersPage() {
@@ -29,10 +29,10 @@ export function AdminUsersPage() {
     setErrors({});
     setSuccess(null);
 
-    const nameVal = validateText(name, 'Nome', 2, 100);
+    const nameVal = validateText(name, 'Full Name', 2, 100);
     const emailVal = validateEmail(email);
     const passVal = validatePassword(password);
-    const orgVal = validateId(orgId, 'ID da Organização');
+    const orgVal = validateId(orgId, 'Organization ID');
 
     const validationErrors = {};
     if (!nameVal.isValid) validationErrors.name = nameVal.message;
@@ -55,7 +55,7 @@ export function AdminUsersPage() {
         role: role,
       });
 
-      setSuccess(`Usuário ${result.name} (${result.email}) cadastrado com sucesso como ${result.role}!`);
+      setSuccess(`User ${result.name} (${result.email}) successfully registered as ${result.role}!`);
       setName('');
       setEmail('');
       setPassword('');
@@ -72,10 +72,10 @@ export function AdminUsersPage() {
       <div className="border-b border-medium-border dark:border-medium-border-dark pb-4">
         <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-medium-text dark:text-medium-text-dark flex items-center gap-2.5">
           <Users className="w-6 h-6 text-medium-green" />
-          Gerenciamento de Usuários
+          User Management
         </h1>
         <p className="text-xs sm:text-sm text-medium-muted dark:text-medium-muted-dark mt-1">
-          Cadastre novos membros e atribua papéis operacionais na sua organização.
+          Register new team members and assign operational roles within your organization.
         </p>
       </div>
 
@@ -98,15 +98,15 @@ export function AdminUsersPage() {
       <div className="p-6 rounded-lg bg-white dark:bg-medium-card-dark border border-medium-border dark:border-medium-border-dark shadow-xs space-y-6">
         <div className="flex items-center gap-2 text-sm font-semibold text-medium-text dark:text-medium-text-dark border-b border-medium-border dark:border-medium-border-dark pb-3">
           <UserPlus className="w-4 h-4 text-medium-green" />
-          <span>Cadastrar Novo Usuário</span>
+          <span>Create New User</span>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Nome Completo"
+              label="Full Name"
               id="uName"
-              placeholder="Ex: João da Silva"
+              placeholder="e.g. John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
               error={errors.name}
@@ -115,10 +115,10 @@ export function AdminUsersPage() {
             />
 
             <Input
-              label="E-mail Corporativo"
+              label="Corporate Email"
               id="uEmail"
               type="email"
-              placeholder="joao@empresa.com"
+              placeholder="john@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
@@ -128,7 +128,7 @@ export function AdminUsersPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
-              label="Senha Inicial"
+              label="Initial Password"
               id="uPassword"
               type="password"
               placeholder="••••••••"
@@ -139,7 +139,7 @@ export function AdminUsersPage() {
             />
 
             <Input
-              label="ID da Organização"
+              label="Organization ID"
               id="uOrgId"
               type="number"
               value={orgId}
@@ -150,7 +150,7 @@ export function AdminUsersPage() {
           </div>
 
           <Select
-            label="Papel / Perfil de Acesso (Role)"
+            label="Role / Access Profile"
             id="uRole"
             value={role}
             onChange={(e) => setRole(e.target.value)}
@@ -164,7 +164,7 @@ export function AdminUsersPage() {
               disabled={loading}
               className="px-6 py-2.5 rounded-full bg-medium-green hover:bg-medium-green-hover text-white font-medium text-xs transition-all shadow-xs disabled:opacity-50 flex items-center gap-2"
             >
-              {loading ? 'Cadastrando...' : 'Cadastrar Usuário'}
+              {loading ? 'Creating...' : 'Create User'}
               {!loading && <UserPlus className="w-4 h-4" />}
             </button>
           </div>

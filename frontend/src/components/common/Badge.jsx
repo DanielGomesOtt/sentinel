@@ -34,11 +34,11 @@ export function StatusBadge({ status }) {
   const defaultStyle = 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700';
 
   const labels = {
-    OPEN: 'Aberto',
-    UNDER_REVIEW: 'Em Análise',
-    IN_CORRECTION: 'Em Correção',
-    RESOLVED: 'Resolvido',
-    CLOSED: 'Fechado',
+    OPEN: 'Open',
+    UNDER_REVIEW: 'Under Review',
+    IN_CORRECTION: 'In Correction',
+    RESOLVED: 'Resolved',
+    CLOSED: 'Closed',
   };
 
   return (

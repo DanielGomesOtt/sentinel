@@ -98,7 +98,7 @@ export function Select({
   error,
   required = false,
   disabled = false,
-  placeholder = 'Selecione uma opção',
+  placeholder = 'Select an option',
   className = '',
 }) {
   return (

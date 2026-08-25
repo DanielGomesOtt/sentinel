@@ -15,12 +15,12 @@ export function Pagination({
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2 border-t border-medium-border dark:border-medium-border-dark text-sm">
       <div className="flex items-center gap-4 text-medium-muted dark:text-medium-muted-dark text-xs sm:text-sm">
         <span>
-          Total de <strong className="text-medium-text dark:text-medium-text-dark font-medium">{totalElements}</strong> registros
+          Total of <strong className="text-medium-text dark:text-medium-text-dark font-medium">{totalElements}</strong> records
         </span>
 
         {onSizeChange && (
           <div className="flex items-center gap-1.5">
-            <label htmlFor="pageSizeSelect" className="hidden sm:inline">Exibir:</label>
+            <label htmlFor="pageSizeSelect" className="hidden sm:inline">Show:</label>
             <select
               id="pageSizeSelect"
               value={pageSize}
@@ -38,14 +38,14 @@ export function Pagination({
 
       <div className="flex items-center gap-2">
         <span className="text-xs text-medium-muted dark:text-medium-muted-dark mr-2">
-          Página <span className="font-semibold text-medium-text dark:text-medium-text-dark">{currentPage + 1}</span> de <span className="font-semibold text-medium-text dark:text-medium-text-dark">{totalPages}</span>
+          Page <span className="font-semibold text-medium-text dark:text-medium-text-dark">{currentPage + 1}</span> of <span className="font-semibold text-medium-text dark:text-medium-text-dark">{totalPages}</span>
         </span>
 
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 0}
           className="inline-flex items-center justify-center p-1.5 rounded-md border border-medium-border dark:border-medium-border-dark text-medium-text dark:text-medium-text-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          title="Página Anterior"
+          title="Previous Page"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -54,7 +54,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages - 1}
           className="inline-flex items-center justify-center p-1.5 rounded-md border border-medium-border dark:border-medium-border-dark text-medium-text dark:text-medium-text-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          title="Próxima Página"
+          title="Next Page"
         >
           <ChevronRight className="w-4 h-4" />
         </button>

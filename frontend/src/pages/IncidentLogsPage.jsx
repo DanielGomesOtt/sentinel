@@ -75,7 +75,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
         setTotalElements(data.totalElements || 0);
       }
     } catch (err) {
-      setError(err.message || 'Erro ao carregar logs de incidentes.');
+      setError(err.message || 'Error loading incident logs.');
     } finally {
       setLoading(false);
     }
@@ -108,7 +108,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
       const cleanParams = sanitizeQueryParams(rawParams);
       await apiClient.downloadPdf('/v1/incidentLog/pdf', cleanParams, `sentinel_logs_${Date.now()}.pdf`);
     } catch (err) {
-      alert(`Falha ao gerar PDF de logs: ${err.message}`);
+      alert(`Failed to generate logs PDF: ${err.message}`);
     } finally {
       setPdfDownloading(false);
     }
@@ -127,10 +127,10 @@ export function IncidentLogsPage({ defaultIncidentId }) {
         <div>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-medium-text dark:text-medium-text-dark flex items-center gap-2.5">
             <Terminal className="w-6 h-6 text-medium-green" />
-            Logs de Incidentes
+            Incident Logs
           </h1>
           <p className="text-xs sm:text-sm text-medium-muted dark:text-medium-muted-dark mt-1">
-            Consulta técnica de registros de logs, exceções e diagnósticos do sistema.
+            Technical query for log records, exceptions, and system diagnostics.
           </p>
         </div>
 
@@ -140,7 +140,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
           className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-medium-border dark:border-medium-border-dark text-xs font-medium text-medium-text dark:text-medium-text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
           <Download className="w-4 h-4 text-medium-muted" />
-          <span>{pdfDownloading ? 'Exportando...' : 'Exportar PDF'}</span>
+          <span>{pdfDownloading ? 'Exporting...' : 'Export PDF'}</span>
         </button>
       </div>
 
@@ -148,42 +148,42 @@ export function IncidentLogsPage({ defaultIncidentId }) {
       <form onSubmit={handleSearchSubmit} className="p-4 rounded-lg bg-gray-50 dark:bg-medium-card-dark border border-medium-border dark:border-medium-border-dark space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <Input
-            label="ID do Incidente"
+            label="Incident ID"
             id="lIncidentId"
             type="number"
-            placeholder="Ex: 1"
+            placeholder="e.g. 1"
             value={incidentId}
             onChange={(e) => setIncidentId(e.target.value)}
           />
 
           <Select
-            label="Nível de Log"
+            label="Log Level"
             id="lLevel"
             value={level}
             onChange={(e) => setLevel(e.target.value)}
             options={LOG_LEVELS}
-            placeholder="Todos os Níveis"
+            placeholder="All Levels"
           />
 
           <Input
-            label="Serviço"
+            label="Service"
             id="lService"
-            placeholder="Nome do serviço..."
+            placeholder="Service name..."
             value={serviceName}
             onChange={(e) => setServiceName(e.target.value)}
           />
 
           <Input
-            label="Mensagem do Log"
+            label="Log Message"
             id="lMessage"
-            placeholder="Buscar no texto..."
+            placeholder="Search text..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             icon={Search}
           />
 
           <Input
-            label="Data Inicial (De)"
+            label="Start Date (From)"
             id="lFrom"
             type="date"
             value={fromDate}
@@ -191,7 +191,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
           />
 
           <Input
-            label="Data Final (Até)"
+            label="End Date (To)"
             id="lTo"
             type="date"
             value={toDate}
@@ -213,14 +213,14 @@ export function IncidentLogsPage({ defaultIncidentId }) {
             }}
             className="px-3 py-1.5 rounded-full border border-medium-border dark:border-medium-border-dark text-xs text-medium-muted hover:text-medium-text dark:hover:text-medium-text-dark"
           >
-            Limpar Filtros
+            Clear Filters
           </button>
 
           <button
             type="submit"
             className="px-4 py-1.5 rounded-full bg-medium-green hover:bg-medium-green-hover text-white text-xs font-medium transition-colors"
           >
-            Filtrar Logs
+            Filter Logs
           </button>
         </div>
       </form>
@@ -237,12 +237,12 @@ export function IncidentLogsPage({ defaultIncidentId }) {
         {loading ? (
           <div className="py-16 text-center text-medium-muted">
             <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-medium-green" />
-            <p className="text-xs">Carregando logs...</p>
+            <p className="text-xs">Loading logs...</p>
           </div>
         ) : logs.length === 0 ? (
           <div className="py-16 text-center text-medium-muted">
             <Terminal className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-sm font-medium">Nenhum log encontrado.</p>
+            <p className="text-sm font-medium">No logs found.</p>
           </div>
         ) : (
           <div className="divide-y divide-medium-border dark:divide-medium-border-dark">
@@ -252,7 +252,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
                   <div className="flex items-center gap-2">
                     <LogLevelBadge level={log.level} />
                     <span className="font-mono text-medium-muted font-medium">
-                      Incidente #{log.incidentId}
+                      Incident #{log.incidentId}
                     </span>
                     <span className="font-mono bg-gray-100 dark:bg-gray-800 text-medium-text dark:text-medium-text-dark px-2 py-0.5 rounded text-[11px]">
                       {log.serviceName}
@@ -265,7 +265,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
                       className="inline-flex items-center gap-1 text-xs text-medium-green hover:underline font-medium"
                     >
                       <Code2 className="w-3.5 h-3.5" />
-                      Ver Stacktrace
+                      View Stacktrace
                     </button>
                   )}
                 </div>
@@ -293,7 +293,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
       <Modal
         isOpen={!!activeStackTrace}
         onClose={() => setActiveStackTrace(null)}
-        title="Stacktrace do Erro"
+        title="Error Stacktrace"
         maxWidth="max-w-3xl"
       >
         {activeStackTrace && (
@@ -304,7 +304,7 @@ export function IncidentLogsPage({ defaultIncidentId }) {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-medium text-medium-text dark:text-medium-text-dark hover:bg-gray-200 transition-colors"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Copiado!' : 'Copiar Stacktrace'}</span>
+                <span>{copied ? 'Copied!' : 'Copy Stacktrace'}</span>
               </button>
             </div>
 

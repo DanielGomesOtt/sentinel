@@ -22,11 +22,11 @@ export function Header({ activeTab, setActiveTab }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'incidents', label: 'Incidentes', icon: FileText, show: true },
-    { id: 'history', label: 'Histórico', icon: History, show: true },
+    { id: 'incidents', label: 'Incidents', icon: FileText, show: true },
+    { id: 'history', label: 'History', icon: History, show: true },
     { id: 'logs', label: 'Logs', icon: Terminal, show: true },
-    { id: 'users', label: 'Usuários', icon: Users, show: isAdmin },
-    { id: 'integrations', label: 'Integrações', icon: KeyRound, show: isAdmin },
+    { id: 'users', label: 'Users', icon: Users, show: isAdmin },
+    { id: 'integrations', label: 'Integrations', icon: KeyRound, show: isAdmin },
   ];
 
   return (
@@ -77,8 +77,8 @@ export function Header({ activeTab, setActiveTab }) {
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full text-medium-muted dark:text-medium-muted-dark hover:text-medium-text dark:hover:text-medium-text-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              title={isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
-              aria-label="Alternar Tema"
+              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label="Toggle Theme"
             >
               {isDark ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -89,7 +89,7 @@ export function Header({ activeTab, setActiveTab }) {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <div className="text-xs font-semibold text-medium-text dark:text-medium-text-dark">
-                  {user?.name || 'Usuário'}
+                  {user?.name || 'User'}
                 </div>
                 <div className="text-[11px] text-medium-muted dark:text-medium-muted-dark">
                   {user?.email}
@@ -102,10 +102,10 @@ export function Header({ activeTab, setActiveTab }) {
             <button
               onClick={logout}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors ml-2"
-              title="Sair do sistema"
+              title="Sign out"
             >
               <LogOut className="w-4 h-4" />
-              <span>Sair</span>
+              <span>Log out</span>
             </button>
           </div>
 
@@ -114,7 +114,7 @@ export function Header({ activeTab, setActiveTab }) {
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full text-medium-muted dark:text-medium-muted-dark"
-              aria-label="Alternar Tema"
+              aria-label="Toggle Theme"
             >
               {isDark ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
             </button>
@@ -122,7 +122,7 @@ export function Header({ activeTab, setActiveTab }) {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-medium-text dark:text-medium-text-dark"
-              aria-label="Abrir Menu"
+              aria-label="Open Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -168,7 +168,7 @@ export function Header({ activeTab, setActiveTab }) {
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors mt-2"
           >
             <LogOut className="w-5 h-5" />
-            <span>Sair da conta</span>
+            <span>Sign out</span>
           </button>
         </div>
       )}

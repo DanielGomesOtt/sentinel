@@ -40,7 +40,7 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-xl' 
             <button
               onClick={onClose}
               className="rounded-full p-1 text-medium-muted hover:text-medium-text dark:hover:text-medium-text-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Fechar"
+              aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>

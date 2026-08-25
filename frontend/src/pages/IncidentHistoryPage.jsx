@@ -47,12 +47,12 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
 
   // Fetch Incident History
   const fetchHistories = useCallback(async () => {
-    const idVal = validateId(incidentId, 'ID do Incidente');
+    const idVal = validateId(incidentId, 'Incident ID');
     if (!idVal.isValid) {
       setHistories([]);
       setTotalPages(0);
       setTotalElements(0);
-      setError('Por favor, informe um ID de incidente válido para consultar o histórico.');
+      setError('Please provide a valid Incident ID to query history.');
       return;
     }
 
@@ -81,7 +81,7 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
         setTotalElements(data.totalElements || 0);
       }
     } catch (err) {
-      setError(err.message || 'Erro ao carregar histórico.');
+      setError(err.message || 'Error loading incident history.');
     } finally {
       setLoading(false);
     }
@@ -100,9 +100,9 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
   };
 
   const handleExportPdf = async () => {
-    const idVal = validateId(incidentId, 'ID do Incidente');
+    const idVal = validateId(incidentId, 'Incident ID');
     if (!idVal.isValid) {
-      alert('Informe um ID de incidente válido para exportar o relatório.');
+      alert('Please provide a valid Incident ID to export the report.');
       return;
     }
 
@@ -123,10 +123,10 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
       await apiClient.downloadPdf(
         '/v1/incidentHistory/pdf',
         cleanParams,
-        `historico_incidente_${incidentId}_${Date.now()}.pdf`
+        `incident_history_${incidentId}_${Date.now()}.pdf`
       );
     } catch (err) {
-      alert(`Falha ao gerar PDF: ${err.message}`);
+      alert(`Failed to generate PDF: ${err.message}`);
     } finally {
       setPdfDownloading(false);
     }
@@ -136,7 +136,7 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
     if (!dateStr) return 'N/A';
     try {
       const d = new Date(dateStr);
-      return d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+      return d.toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' });
     } catch (e) {
       return dateStr;
     }
@@ -149,10 +149,10 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
         <div>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-medium-text dark:text-medium-text-dark flex items-center gap-2.5">
             <History className="w-6 h-6 text-medium-green" />
-            Histórico de Alterações
+            Audit History
           </h1>
           <p className="text-xs sm:text-sm text-medium-muted dark:text-medium-muted-dark mt-1">
-            Audit trail e linha do tempo de mudanças registradas em cada incidente.
+            Audit trail and chronological record of changes logged for each incident.
           </p>
         </div>
 
@@ -162,7 +162,7 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
           className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-medium-border dark:border-medium-border-dark text-xs font-medium text-medium-text dark:text-medium-text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
           <Download className="w-4 h-4 text-medium-muted" />
-          <span>{pdfDownloading ? 'Exportando...' : 'Exportar PDF'}</span>
+          <span>{pdfDownloading ? 'Exporting...' : 'Export PDF'}</span>
         </button>
       </div>
 
@@ -170,10 +170,10 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
       <form onSubmit={handleSearchSubmit} className="p-4 rounded-lg bg-gray-50 dark:bg-medium-card-dark border border-medium-border dark:border-medium-border-dark space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <Input
-            label="ID do Incidente *"
+            label="Incident ID *"
             id="hIncidentId"
             type="number"
-            placeholder="Ex: 10"
+            placeholder="e.g. 10"
             value={incidentId}
             onChange={(e) => setIncidentId(e.target.value)}
             icon={Search}
@@ -181,33 +181,33 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
           />
 
           <Select
-            label="Novo Status"
+            label="New Status"
             id="hNewStatus"
             value={newStatus}
             onChange={(e) => setNewStatus(e.target.value)}
             options={STATUSES}
-            placeholder="Todos os Status"
+            placeholder="All Statuses"
           />
 
           <Select
-            label="Status Anterior"
+            label="Previous Status"
             id="hPrevStatus"
             value={previousStatus}
             onChange={(e) => setPreviousStatus(e.target.value)}
             options={STATUSES}
-            placeholder="Todos os Status"
+            placeholder="All Statuses"
           />
 
           <Input
-            label="Ação (Ex: UPDATE)"
+            label="Action (e.g. UPDATE)"
             id="hAction"
-            placeholder="Ação realizada..."
+            placeholder="Action performed..."
             value={action}
             onChange={(e) => setAction(e.target.value)}
           />
 
           <Input
-            label="Data Inicial (De)"
+            label="Start Date (From)"
             id="hFrom"
             type="date"
             value={fromDate}
@@ -215,7 +215,7 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
           />
 
           <Input
-            label="Data Final (Até)"
+            label="End Date (To)"
             id="hTo"
             type="date"
             value={toDate}
@@ -236,14 +236,14 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
             }}
             className="px-3 py-1.5 rounded-full border border-medium-border dark:border-medium-border-dark text-xs text-medium-muted hover:text-medium-text dark:hover:text-medium-text-dark"
           >
-            Limpar Filtros
+            Clear Filters
           </button>
 
           <button
             type="submit"
             className="px-4 py-1.5 rounded-full bg-medium-green hover:bg-medium-green-hover text-white text-xs font-medium transition-colors"
           >
-            Buscar Histórico
+            Search History
           </button>
         </div>
       </form>
@@ -260,29 +260,28 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
         {loading ? (
           <div className="py-16 text-center text-medium-muted">
             <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-medium-green" />
-            <p className="text-xs">Carregando histórico do incidente...</p>
+            <p className="text-xs">Loading incident history...</p>
           </div>
         ) : histories.length === 0 ? (
           <div className="py-12 text-center text-medium-muted">
             <History className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-sm font-medium">Nenhum registro de histórico encontrado.</p>
-            <p className="text-xs mt-1">Informe um ID de incidente válido no campo de busca.</p>
+            <p className="text-sm font-medium">No history records found.</p>
+            <p className="text-xs mt-1">Provide a valid Incident ID in the search field above.</p>
           </div>
         ) : (
           <div className="relative border-l-2 border-medium-border dark:border-medium-border-dark ml-4 space-y-6">
             {histories.map((item) => (
               <div key={item.id} className="relative pl-6 group">
-                {/* Timeline node icon */}
                 <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-medium-green border-2 border-white dark:border-medium-card-dark" />
 
                 <div className="p-4 rounded-lg bg-gray-50 dark:bg-medium-surface-dark border border-medium-border dark:border-medium-border-dark space-y-2">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-xs text-medium-text dark:text-medium-text-dark uppercase tracking-wide">
-                        {item.action || 'ALTERAÇÃO DE STATUS'}
+                        {item.action || 'STATUS CHANGE'}
                       </span>
                       <span className="font-mono text-[11px] text-medium-muted dark:text-medium-muted-dark">
-                        (Registro #{item.id})
+                        (Record #{item.id})
                       </span>
                     </div>
 
@@ -305,7 +304,7 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
                   <div className="text-[11px] text-medium-muted dark:text-medium-muted-dark flex items-center gap-1.5 pt-1 border-t border-medium-border/50 dark:border-medium-border-dark/50">
                     <User className="w-3.5 h-3.5 text-medium-muted" />
                     <span>
-                      Executado por ID: <strong className="text-medium-text dark:text-medium-text-dark font-medium">#{item.performedBy || item.performedBySystemIntegration || 'Sistema'}</strong>
+                      Performed by ID: <strong className="text-medium-text dark:text-medium-text-dark font-medium">#{item.performedBy || item.performedBySystemIntegration || 'System'}</strong>
                     </span>
                   </div>
                 </div>

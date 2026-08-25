@@ -23,7 +23,7 @@ export function AdminIntegrationsPage() {
     setError(null);
     setCreatedIntegration(null);
 
-    const nameVal = validateText(name, 'Nome da Integração', 3, 100);
+    const nameVal = validateText(name, 'Integration Name', 3, 100);
     if (!nameVal.isValid) {
       setError(nameVal.message);
       return;
@@ -53,7 +53,7 @@ export function AdminIntegrationsPage() {
     setTestToken('');
 
     if (!testClientId || !testClientSecret) {
-      setTestError('Por favor, informe o Client ID e Client Secret para gerar o token.');
+      setTestError('Please provide both Client ID and Client Secret to issue a token.');
       return;
     }
 
@@ -84,10 +84,10 @@ export function AdminIntegrationsPage() {
       <div className="border-b border-medium-border dark:border-medium-border-dark pb-4">
         <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-medium-text dark:text-medium-text-dark flex items-center gap-2.5">
           <KeyRound className="w-6 h-6 text-medium-green" />
-          Integrações de Sistemas (M2M)
+          System Integrations (M2M)
         </h1>
         <p className="text-xs sm:text-sm text-medium-muted dark:text-medium-muted-dark mt-1">
-          Gere credenciais para sistemas externos se autenticarem e registrarem incidentes automáticos (`ROLE_SYSTEM`).
+          Generate credentials for external systems to authenticate and register automated incidents (`ROLE_SYSTEM`).
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export function AdminIntegrationsPage() {
       <div className="p-6 rounded-lg bg-white dark:bg-medium-card-dark border border-medium-border dark:border-medium-border-dark shadow-xs space-y-6">
         <div className="flex items-center gap-2 text-sm font-semibold text-medium-text dark:text-medium-text-dark border-b border-medium-border dark:border-medium-border-dark pb-3">
           <Cpu className="w-4 h-4 text-medium-green" />
-          <span>Registrar Nova Integração de Sistema</span>
+          <span>Register New System Integration</span>
         </div>
 
         {error && (
@@ -107,14 +107,14 @@ export function AdminIntegrationsPage() {
 
         <form onSubmit={handleCreateSubmit} className="space-y-4">
           <Input
-            label="Nome do Sistema Externo"
+            label="External System Name"
             id="sysName"
-            placeholder="Ex: Datadog Monitoring / Prometheus Alertmanager"
+            placeholder="e.g. Datadog Monitoring / Prometheus Alertmanager"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             maxLength={100}
-            helpText="Identificador único para o sistema de monitoramento ou serviço integrado."
+            helpText="Unique identifier for the external monitoring or service integration."
           />
 
           <div className="flex justify-end">
@@ -123,7 +123,7 @@ export function AdminIntegrationsPage() {
               disabled={loading}
               className="px-5 py-2.5 rounded-full bg-medium-green hover:bg-medium-green-hover text-white font-medium text-xs transition-all shadow-xs disabled:opacity-50 flex items-center gap-2"
             >
-              {loading ? 'Gerando Credenciais...' : 'Gerar Credenciais de Integração'}
+              {loading ? 'Generating Credentials...' : 'Generate Integration Credentials'}
             </button>
           </div>
         </form>
@@ -133,7 +133,7 @@ export function AdminIntegrationsPage() {
           <div className="mt-6 p-4 rounded-lg bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 space-y-4 animate-fadeIn">
             <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
               <CheckCircle2 className="w-4 h-4" />
-              <span>Credenciais Criadas para: {createdIntegration.name}</span>
+              <span>Credentials Created for: {createdIntegration.name}</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
@@ -144,7 +144,7 @@ export function AdminIntegrationsPage() {
                   <button
                     onClick={() => copyToClipboard(createdIntegration.clientId, 'clientId')}
                     className="p-1 text-medium-muted hover:text-medium-text"
-                    title="Copiar Client ID"
+                    title="Copy Client ID"
                   >
                     {copiedField === 'clientId' ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
@@ -159,7 +159,7 @@ export function AdminIntegrationsPage() {
                     <button
                       onClick={() => copyToClipboard(createdIntegration.clientSecretHash, 'secret')}
                       className="p-1 text-medium-muted hover:text-medium-text"
-                      title="Copiar Hash"
+                      title="Copy Hash"
                     >
                       {copiedField === 'secret' ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
@@ -175,7 +175,7 @@ export function AdminIntegrationsPage() {
       <div className="p-6 rounded-lg bg-white dark:bg-medium-card-dark border border-medium-border dark:border-medium-border-dark shadow-xs space-y-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-medium-text dark:text-medium-text-dark border-b border-medium-border dark:border-medium-border-dark pb-3">
           <Terminal className="w-4 h-4 text-medium-green" />
-          <span>Testar Gerador de JWT do Sistema (`POST /v1/auth/token`)</span>
+          <span>Test System JWT Generator (`POST /v1/auth/token`)</span>
         </div>
 
         {testError && (
@@ -212,7 +212,7 @@ export function AdminIntegrationsPage() {
               disabled={testLoading}
               className="px-4 py-2 rounded-full border border-medium-border dark:border-medium-border-dark text-xs font-medium text-medium-text dark:text-medium-text-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              {testLoading ? 'Gerando Token...' : 'Gerar Token de Teste'}
+              {testLoading ? 'Generating Token...' : 'Generate Test Token'}
             </button>
           </div>
         </form>
@@ -220,13 +220,13 @@ export function AdminIntegrationsPage() {
         {testToken && (
           <div className="p-4 rounded bg-gray-900 text-gray-100 space-y-2 text-xs font-mono">
             <div className="flex items-center justify-between text-gray-400 font-sans">
-              <span>Token JWT Emitido:</span>
+              <span>Issued JWT Token:</span>
               <button
                 onClick={() => copyToClipboard(testToken, 'token')}
                 className="hover:text-white flex items-center gap-1"
               >
                 {copiedField === 'token' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedField === 'token' ? 'Copiado' : 'Copiar JWT'}</span>
+                <span>{copiedField === 'token' ? 'Copied' : 'Copy JWT'}</span>
               </button>
             </div>
             <p className="break-all text-emerald-400">{testToken}</p>
