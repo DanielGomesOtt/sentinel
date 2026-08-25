@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-medium-bg dark:bg-medium-bg-dark text-medium-text dark:text-medium-text-dark font-sans antialiased transition-colors duration-200 selection:bg-medium-green-light selection:text-medium-green dark:selection:bg-medium-green-dark-bg dark:selection:text-emerald-300;
+  }
+}
+
+/* Custom scrollbar matching minimalist design */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.5);
+}
