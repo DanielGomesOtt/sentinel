@@ -76,7 +76,7 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
       const data = await apiClient.get('/v1/incidentHistory', cleanParams);
 
       if (data) {
-        setHistories(data.histories || []);
+        setHistories(data.incidentHistories || []);
         setTotalPages(data.totalPages || 0);
         setTotalElements(data.totalElements || 0);
       }

@@ -62,7 +62,7 @@ class IncidentHistoryServiceTest {
                 when(incidentHistoryRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
                 PaginatedIncidentHistoriesDTO result = incidentHistoryService.findHistoriesByParams(0, 10, 100L,
-                                "OPEN", "CLOSED", "change", "2026-07-27 00:00:00", "2026-07-27 00:00:00", null,
+                                "OPEN", "CLOSED", "change", Instant.parse("2026-07-27T00:00:00Z"), Instant.parse("2026-07-27T00:00:00Z"), null,
                                 principal);
 
                 assertNotNull(result);
@@ -83,7 +83,7 @@ class IncidentHistoryServiceTest {
                 when(incidentHistoryRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
 
                 byte[] pdf = incidentHistoryService.generateIncidentHistoryPdf(0, 10, 100L,
-                                "OPEN", "CLOSED", "change", "2026-07-27 00:00:00", "2026-07-27 00:00:00", null,
+                                "OPEN", "CLOSED", "change", Instant.parse("2026-07-27T00:00:00Z"), Instant.parse("2026-07-27T00:00:00Z"), null,
                                 principal);
 
                 assertNotNull(pdf);
@@ -98,7 +98,7 @@ class IncidentHistoryServiceTest {
 
                 assertThrows(IncidentNotFoundException.class,
                                 () -> incidentHistoryService.generateIncidentHistoryPdf(0, 10, 100L,
-                                                "OPEN", "CLOSED", "change", "2026-07-27 00:00:00",
-                                                "2026-07-27 00:00:00", null, principal));
+                                                "OPEN", "CLOSED", "change", Instant.parse("2026-07-27T00:00:00Z"),
+                                                Instant.parse("2026-07-27T00:00:00Z"), null, principal));
         }
 }

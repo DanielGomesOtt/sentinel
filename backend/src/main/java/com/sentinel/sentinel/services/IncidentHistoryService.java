@@ -33,41 +33,27 @@ public class IncidentHistoryService {
     }
 
     public PaginatedIncidentHistoriesDTO findHistoriesByParams(int page, int size, Long incidentId, String newStatus,
-                                                               String previousStatus, String action, String from, String to,
-                                                               Long userId, AuthenticatedPrincipal principal) {
+            String previousStatus, String action, Instant from, Instant to,
+            Long userId, AuthenticatedPrincipal principal) {
 
         Users user = principal.getUser();
 
         Long organizationId = user.getOrganization().getId();
 
-        if(user.getRole().name().equals("USER")) {
+        if (user.getRole().name().equals("USER")) {
             userId = user.getId();
         }
 
         Pageable pagination = PageRequest.of(page, size);
         IncidentStatus newStatusEnum = null;
         IncidentStatus previousStatusEnum = null;
-        Instant fromInstant = null;
-        Instant toInstant = null;
 
-        if(newStatus != null) {
+        if (newStatus != null) {
             newStatusEnum = IncidentStatus.valueOf(newStatus);
         }
 
-        if(previousStatus != null) {
+        if (previousStatus != null) {
             previousStatusEnum = IncidentStatus.valueOf(previousStatus);
-        }
-
-        if(from != null) {
-            fromInstant = LocalDateTime
-                    .parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                    .toInstant(ZoneOffset.UTC);
-        }
-
-        if(to != null) {
-            toInstant = LocalDateTime
-                    .parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                    .toInstant(ZoneOffset.UTC);
         }
 
         Specification<IncidentHistory> spec = Specification
@@ -76,8 +62,8 @@ public class IncidentHistoryService {
                 .and(IncidentHistorySpecification.newStatus(newStatusEnum))
                 .and(IncidentHistorySpecification.previousStatus(previousStatusEnum))
                 .and(IncidentHistorySpecification.action(action))
-                .and(IncidentHistorySpecification.from(fromInstant))
-                .and(IncidentHistorySpecification.to(toInstant))
+                .and(IncidentHistorySpecification.from(from))
+                .and(IncidentHistorySpecification.to(to))
                 .and(IncidentHistorySpecification.OrganizationId(organizationId));
 
         Page<IncidentHistory> incidentHistories = incidentHistoryRepository.findAll(spec, pagination);
@@ -85,47 +71,35 @@ public class IncidentHistoryService {
         List<CreatedIncidentHistoryDTO> formattedIncidentHistories = incidentHistories.getContent().stream()
                 .map(CreatedIncidentHistoryDTO::new).toList();
 
-        return new PaginatedIncidentHistoriesDTO(formattedIncidentHistories, incidentHistories.isFirst(), incidentHistories.isLast(),
+        return new PaginatedIncidentHistoriesDTO(formattedIncidentHistories, incidentHistories.isFirst(),
+                incidentHistories.isLast(),
                 incidentHistories.getNumber(), incidentHistories.getNumberOfElements(), incidentHistories.getSize(),
                 incidentHistories.getTotalElements(), incidentHistories.getTotalPages());
     }
 
-    public List<IncidentHistoryPdfDTO> findHistoryByParamsToPdfReport(int page, int size, Long incidentId, String newStatus,
-                                                             String previousStatus, String action, String from, String to,
-                                                             Long userId, AuthenticatedPrincipal principal) {
+    public List<IncidentHistoryPdfDTO> findHistoryByParamsToPdfReport(int page, int size, Long incidentId,
+            String newStatus,
+            String previousStatus, String action, Instant from, Instant to,
+            Long userId, AuthenticatedPrincipal principal) {
 
         Users user = principal.getUser();
 
         Long organizationId = user.getOrganization().getId();
 
-        if(user.getRole().name().equals("USER")) {
+        if (user.getRole().name().equals("USER")) {
             userId = user.getId();
         }
 
         Pageable pagination = PageRequest.of(page, size);
         IncidentStatus newStatusEnum = null;
         IncidentStatus previousStatusEnum = null;
-        Instant fromInstant = null;
-        Instant toInstant = null;
 
-        if(newStatus != null) {
+        if (newStatus != null) {
             newStatusEnum = IncidentStatus.valueOf(newStatus);
         }
 
-        if(previousStatus != null) {
+        if (previousStatus != null) {
             previousStatusEnum = IncidentStatus.valueOf(previousStatus);
-        }
-
-        if(from != null) {
-            fromInstant = LocalDateTime
-                    .parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                    .toInstant(ZoneOffset.UTC);
-        }
-
-        if(to != null) {
-            toInstant = LocalDateTime
-                    .parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                    .toInstant(ZoneOffset.UTC);
         }
 
         Specification<IncidentHistory> spec = Specification
@@ -134,8 +108,8 @@ public class IncidentHistoryService {
                 .and(IncidentHistorySpecification.newStatus(newStatusEnum))
                 .and(IncidentHistorySpecification.previousStatus(previousStatusEnum))
                 .and(IncidentHistorySpecification.action(action))
-                .and(IncidentHistorySpecification.from(fromInstant))
-                .and(IncidentHistorySpecification.to(toInstant))
+                .and(IncidentHistorySpecification.from(from))
+                .and(IncidentHistorySpecification.to(to))
                 .and(IncidentHistorySpecification.OrganizationId(organizationId));
 
         Page<IncidentHistory> incidentHistories = incidentHistoryRepository.findAll(spec, pagination);
@@ -145,13 +119,12 @@ public class IncidentHistoryService {
     }
 
     public byte[] generateIncidentHistoryPdf(int page, int size, Long incidentId, String newStatus,
-                                               String previousStatus, String action, String from, String to,
-                                               Long userId, AuthenticatedPrincipal principal) throws Exception {
+            String previousStatus, String action, Instant from, Instant to,
+            Long userId, AuthenticatedPrincipal principal) throws Exception {
 
         List<IncidentHistoryPdfDTO> incidentHistories = findHistoryByParamsToPdfReport(
                 page, size, incidentId, newStatus,
-                previousStatus, action, from, to, userId, principal
-        );
+                previousStatus, action, from, to, userId, principal);
 
         if (!incidentHistories.isEmpty()) {
             PdfTableGenerator generator = new PdfTableGenerator();
