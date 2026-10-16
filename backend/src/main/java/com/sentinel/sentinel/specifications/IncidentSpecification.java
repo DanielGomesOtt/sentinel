@@ -64,7 +64,10 @@ public class IncidentSpecification {
         return (root, query, criteriaBuilder) -> {
             if (serviceName == null) return null;
 
-            return criteriaBuilder.equal(root.get("serviceName"), serviceName);
+            return criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("serviceName")),
+                    "%" + serviceName.toLowerCase() + "%"
+            );
         };
     }
 
