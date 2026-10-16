@@ -138,25 +138,15 @@ export function AdminUsersPage() {
               required
             />
 
-            <Input
-              label="Organization ID"
-              id="uOrgId"
-              type="number"
-              value={orgId}
-              onChange={(e) => setOrgId(e.target.value)}
-              error={errors.organizationId}
+            <Select
+              label="Role / Access Profile"
+              id="uRole"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              options={ROLES}
               required
             />
           </div>
-
-          <Select
-            label="Role / Access Profile"
-            id="uRole"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            options={ROLES}
-            required
-          />
 
           <div className="pt-4 flex justify-end">
             <button
