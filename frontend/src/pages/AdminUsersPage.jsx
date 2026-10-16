@@ -54,8 +54,8 @@ export function AdminUsersPage() {
         organizationId: orgVal.sanitizedValue,
         role: role,
       });
-
-      setSuccess(`User ${result.name} (${result.email}) successfully registered as ${result.role}!`);
+      
+      setSuccess(`User ${result.name} (${result.email}) successfully registered as ${result.Role}!`);
       setName('');
       setEmail('');
       setPassword('');
