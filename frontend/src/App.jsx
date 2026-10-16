@@ -68,7 +68,7 @@ function MainContent() {
       <footer className="border-t border-medium-border dark:border-medium-border-dark py-6 text-center text-xs text-medium-muted dark:text-medium-muted-dark">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>Sentinel Incident Management System &copy; {new Date().getFullYear()}</span>
-          <span>Minimalist Design • React JS + Tailwind CSS</span>
+          <span>Version 1.0.0</span>
         </div>
       </footer>
     </div>
