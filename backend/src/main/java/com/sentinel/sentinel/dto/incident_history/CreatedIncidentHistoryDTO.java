@@ -10,6 +10,7 @@ public record CreatedIncidentHistoryDTO(
         String action,
         Long performedBy,
         Long performedBySystemIntegration,
+        String user,
         String createdAt
 ) {
 
@@ -19,6 +20,9 @@ public record CreatedIncidentHistoryDTO(
                 (incidentHistory.getPerformedBy() != null ? incidentHistory.getPerformedBy().getId() : null),
                 (incidentHistory.getPerformedBySystemIntegration() != null ?
                         incidentHistory.getPerformedBySystemIntegration().getId() : null),
+                (incidentHistory.getPerformedBy() != null ? incidentHistory.getPerformedBy().getName() :
+                        incidentHistory.getPerformedBySystemIntegration() != null ?
+                                incidentHistory.getPerformedBySystemIntegration().getName() : ""),
                 incidentHistory.getCreatedAt().toString());
     }
 }

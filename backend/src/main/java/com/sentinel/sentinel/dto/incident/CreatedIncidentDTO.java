@@ -17,10 +17,10 @@ public record CreatedIncidentDTO(
         this(createdIncident.getId(), createdIncident.getTitle(), createdIncident.getDescription(),
                 createdIncident.getSeverity().name(), createdIncident.getIncidentStatus().name(),
                 createdIncident.getServiceName(), createdIncident.getSlaDeadline().toString(),
-                createdIncident.getCreatedBy() != null ? createdIncident.getCreatedBy().getId() :
-                        createdIncident.getCreatedBySystemIntegration().getId(),
-                createdIncident.getCreatedBy() != null ? createdIncident.getCreatedBy().getName() :
-                        createdIncident.getCreatedBySystemIntegration().getName()
+                (createdIncident.getCreatedBy() != null ? createdIncident.getCreatedBy().getId() :
+                        createdIncident.getCreatedBySystemIntegration().getId()),
+                (createdIncident.getCreatedBy() != null ? createdIncident.getCreatedBy().getName() :
+                        createdIncident.getCreatedBySystemIntegration().getName())
         );
     }
 }

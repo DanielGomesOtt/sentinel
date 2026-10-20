@@ -304,7 +304,7 @@ export function IncidentHistoryPage({ defaultIncidentId }) {
                   <div className="text-[11px] text-medium-muted dark:text-medium-muted-dark flex items-center gap-1.5 pt-1 border-t border-medium-border/50 dark:border-medium-border-dark/50">
                     <User className="w-3.5 h-3.5 text-medium-muted" />
                     <span>
-                      Performed by ID: <strong className="text-medium-text dark:text-medium-text-dark font-medium">#{item.performedBy || item.performedBySystemIntegration || 'System'}</strong>
+                      Performed by: <strong className="text-medium-text dark:text-medium-text-dark font-medium">{item.user || 'System'}</strong>
                     </span>
                   </div>
                 </div>
