@@ -10,13 +10,17 @@ public record CreatedIncidentDTO(
         String status,
         String serviceName,
         String slaDeadline,
-        Long createdBy
+        Long createdBy,
+        String user
 ) {
     public CreatedIncidentDTO(Incident createdIncident) {
         this(createdIncident.getId(), createdIncident.getTitle(), createdIncident.getDescription(),
                 createdIncident.getSeverity().name(), createdIncident.getIncidentStatus().name(),
                 createdIncident.getServiceName(), createdIncident.getSlaDeadline().toString(),
-                createdIncident.getCreatedBy() != null ? createdIncident.getId() :
-                        createdIncident.getCreatedBySystemIntegration().getId());
+                createdIncident.getCreatedBy() != null ? createdIncident.getCreatedBy().getId() :
+                        createdIncident.getCreatedBySystemIntegration().getId(),
+                createdIncident.getCreatedBy() != null ? createdIncident.getCreatedBy().getName() :
+                        createdIncident.getCreatedBySystemIntegration().getName()
+        );
     }
 }

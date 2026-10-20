@@ -668,7 +668,7 @@ export function IncidentsPage({ onViewHistory, onViewLogs }) {
 
             <div className="grid grid-cols-2 gap-3 text-medium-muted dark:text-medium-muted-dark">
               <div>
-                <span className="font-medium text-medium-text dark:text-medium-text-dark">Created By (ID):</span> #{selectedIncident.createdBy || 'System'}
+                <span className="font-medium text-medium-text dark:text-medium-text-dark">Created By:</span> {selectedIncident.user || 'System'}
               </div>
               <div>
                 <span className="font-medium text-medium-text dark:text-medium-text-dark">SLA Deadline:</span> {formatDate(selectedIncident.slaDeadline)}
