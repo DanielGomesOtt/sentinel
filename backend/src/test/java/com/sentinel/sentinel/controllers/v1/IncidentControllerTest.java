@@ -78,7 +78,7 @@ class IncidentControllerTest {
 
         CreatedIncidentDTO createdIncident = new CreatedIncidentDTO(1L, "title", "description",
                 Severity.HIGH.name(), IncidentStatus.OPEN.name(), "service name",
-                Instant.now().plus(Duration.ofHours(2)).toString(), 1L);
+                Instant.now().plus(Duration.ofHours(2)).toString(), 1L, "user");
 
 
         when(incidentService.createIncident(any(), any())).thenReturn(createdIncident);
@@ -97,7 +97,7 @@ class IncidentControllerTest {
     void findIncidentByIdShouldReturnIncident() throws Exception {
         CreatedIncidentDTO createdIncident = new CreatedIncidentDTO(1L, "title", "description",
                 Severity.HIGH.name(), IncidentStatus.OPEN.name(), "service name",
-                Instant.now().plus(Duration.ofHours(2)).toString(), 1L);
+                Instant.now().plus(Duration.ofHours(2)).toString(), 1L, "user");
 
         when(incidentService.getIncidentById(any(), any())).thenReturn(createdIncident);
 

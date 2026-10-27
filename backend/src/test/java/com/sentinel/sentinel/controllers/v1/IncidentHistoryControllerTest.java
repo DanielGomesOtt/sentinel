@@ -49,7 +49,7 @@ class IncidentHistoryControllerTest {
     @DisplayName("find histories by params should return paginated histories")
     void findHistoriesByParamsShouldReturnPaginatedHistories() throws Exception {
         CreatedIncidentHistoryDTO historyDto = new CreatedIncidentHistoryDTO(1L, 2L,
-                "OPEN", "CLOSED", "update", 1L, null, "2026-07-27 00:00:00");
+                "OPEN", "CLOSED", "update", 1L, null, "user", "2026-07-27 00:00:00");
         PaginatedIncidentHistoriesDTO paginated = new PaginatedIncidentHistoriesDTO(
                 List.of(historyDto),
                 true,

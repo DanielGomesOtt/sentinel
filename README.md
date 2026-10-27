@@ -266,45 +266,58 @@ Preencha no `.env` tanto as credenciais do banco de dados (PostgreSQL) quanto as
 
 ## Executando o Projeto
 
-Execute os componentes na ordem abaixo, pois o **frontend** depende do **backend**, que por sua vez depende do **banco de dados** estar em execução.
+Você pode subir a aplicação completa (**Banco de Dados**, **Backend** e **Frontend**) com um único comando via **Docker Compose**, ou executar os serviços individualmente.
 
-### 1. Banco de Dados (PostgreSQL via Docker)
+### Opção 1: Executar Tudo via Docker Compose (Recomendado)
 
-Inicie o container do banco de dados utilizando o Docker Compose:
+Inicie todos os serviços:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
-Comandos úteis para gerenciar o banco:
-- Acompanhar logs do container: `docker compose logs -f db`
-- Verificar status do container: `docker compose ps`
-- Parar o container: `docker compose down`
+- **Frontend**: `http://localhost:3000`
+- **Backend API**: `http://localhost:8080`
+- **Swagger UI**: `http://localhost:8080/swagger-ui/index.html`
+- **PostgreSQL**: `localhost:5432`
 
-### 2. Backend (Spring Boot)
+Comandos úteis:
+- Ver status dos containers: `docker compose ps`
+- Ver logs de todos os serviços: `docker compose logs -f`
+- Ver logs de um serviço específico: `docker compose logs -f backend` (ou `frontend`, `db`)
+- Parar todos os serviços: `docker compose down`
 
-Com o banco de dados rodando, inicie a aplicação Spring Boot:
+---
+
+### Opção 2: Executar em Desenvolvimento Local
+
+Caso prefira rodar o backend ou frontend localmente:
+
+#### 1. Banco de Dados (PostgreSQL via Docker)
+
+```bash
+docker compose up -d db
+```
+
+#### 2. Backend (Spring Boot)
+
+Com o banco de dados rodando, inicie o backend:
 
 No Windows:
-
 ```powershell
 cd backend
 ./mvnw.cmd spring-boot:run
 ```
 
 No Linux/macOS ou bash:
-
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
 
-> A API ficará disponível em `http://localhost:8080`.  
-> A documentação Swagger UI estará acessível em `http://localhost:8080/swagger-ui/index.html`.
+#### 3. Frontend (React + Vite)
 
-### 3. Frontend (React + Vite)
-
-Com o backend ativo, abra um novo terminal, instale as dependências e inicie o servidor de desenvolvimento:
+Com o backend ativo, inicie o servidor de desenvolvimento:
 
 ```bash
 cd frontend
@@ -312,7 +325,7 @@ npm install
 npm run dev
 ```
 
-> A aplicação frontend ficará acessível em `http://localhost:3000` (com proxy já configurado para repassar requisições `/v1` ao backend na porta `8080`).
+> A aplicação frontend ficará acessível em `http://localhost:3000`.
 
 ## Testes
 
