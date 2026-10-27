@@ -243,24 +243,26 @@ spring.datasource.password=password
 spring.datasource.driver-class-name=org.postgresql.Driver
 spring.jpa.show-sql=true
 
-# Envio de e-mail (Mailtrap / SMTP)
-spring.mail.host=sandbox.smtp.mailtrap.io
-spring.mail.port=587
-spring.mail.username=seu_usuario_smtp
-spring.mail.password=sua_senha_smtp
+# Envio de e-mail (Mailtrap / SMTP via .env)
+spring.mail.host=${SPRING_MAIL_SENDER_HOST}
+spring.mail.port=${SPRING_MAIL_SENDER_PORT}
+spring.mail.username=${SPRING_MAIL_SENDER_USERNAME}
+spring.mail.password=${SPRING_MAIL_SENDER_PASSWORD}
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
-smtp.mail=noreply@sentinel.com
+smtp.mail=${SMTP_MAIL}
 
 api.security.token.secret=secret
 api.security.token.duration=24
 ```
 
-Além disso, configure as variáveis de ambiente do Docker criando o arquivo `.env` a partir do `.env.example`:
+Além disso, configure as variáveis de ambiente criando o arquivo `.env` a partir do `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
+
+Preencha no `.env` tanto as credenciais do banco de dados (PostgreSQL) quanto as do serviço de e-mail (Mailtrap / SMTP).
 
 ## Executando o Projeto
 

@@ -11,13 +11,13 @@ spring.datasource.username=${SPRING_DATASOURCE_USERNAME:default_db_username}
 spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:default_db_password}
 
 #SPRING MAIL
-spring.mail.host=${SPRING_MAIL_SENDER_HOST:default_host}
-spring.mail.port=${SPRING_MAIL_SENDER_PORT:default_port}
-spring.mail.username=${SPRING_MAIL_SENDER_USERNAME:default_mail_username}
-spring.mail.password=${SPRING_MAIL_SENDER_PASSWORD:default_mail_password}
+spring.mail.host=${SPRING_MAIL_SENDER_HOST}
+spring.mail.port=${SPRING_MAIL_SENDER_PORT}
+spring.mail.username=${SPRING_MAIL_SENDER_USERNAME}
+spring.mail.password=${SPRING_MAIL_SENDER_PASSWORD}
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
-smtp.mail=${SMTP_MAIL:default_email}
+smtp.mail=${SMTP_MAIL}
 
 # JDBC DRIVER
 spring.datasource.driver-class-name=org.postgresql.Driver
